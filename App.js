@@ -163,7 +163,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar from './Navbar';
@@ -172,41 +172,29 @@ import ScrollingButtonMenu from './ScrollingButtonMenu';
 
 let menus = [
     {
-       text:'England',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
+       text:'Cari Produk',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
     },
     {
-       text:'Australia',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
+       text:'Cari Inspirasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
     },
     {
-       text:'Indonesian',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
+       text:'Rekomendasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
     },
     {
-       text:'USA',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
+       text:'Promo',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
     },
-    {
-       text:'Canada',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
-    },
-    {
-       text:'Spain',
-       textColor:'#FFFFFF',
-       backgroundColor:'#388E3C',
-       borderColor:'#388E3C',
-    }
 
 ];
 
@@ -223,6 +211,7 @@ export default class Example extends React.Component {
     this.onSend = this.onSend.bind(this);
     this.onReceive = this.onReceive.bind(this);
     this.renderCustomActions = this.renderCustomActions.bind(this);
+    this.renderComposer = this.renderComposer.bind(this);
     this.renderCustomMenu = this.renderCustomMenu.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderSystemMessage = this.renderSystemMessage.bind(this);
@@ -400,6 +389,16 @@ export default class Example extends React.Component {
     );
   }
 
+  renderComposer(props){ 
+    return ( 
+      <Composer
+      {...props}
+      placeholder={'Ketik namamu disini'}
+      placeholderTextColor={'#eba43b'}
+      />
+    );
+  }
+
 
   renderSystemMessage(props) {
     return (
@@ -421,8 +420,8 @@ export default class Example extends React.Component {
             <Send
                 {...props}
             >
-                <View style={{marginRight: -9, marginBottom: -14}}>
-                    <Image source={require('./shared/static/ic_send_white_3x.png')} resizeMode={'center'}/>
+                <View>
+                    <Image source={require('./shared/static/ic_send_white_3x.png')} style={{marginTop: 8, marginLeft:-3 , width: 28, height: 28}}/>
                 </View>
             </Send>
         );
@@ -476,7 +475,7 @@ export default class Example extends React.Component {
             renderMenu={this.renderCustomMenu}
             renderBubble={this.renderBubble}
             renderCustomView={this.renderCustomView}
-
+            renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
             renderSend={this.renderSend}
             renderInputToolbar={this.renderInputToolbar} 

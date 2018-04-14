@@ -163,14 +163,13 @@ import {
   Image,
 } from 'react-native';
 
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar from './Navbar';
 import CustomMenu from './CustomMenu';
-import ScrollingButtonMenu from './ScrollingButtonMenu';
 
-let menus = [
+let menus1 = [
     {
        text:'Cari Produk',
        textColor:'#eba43b',
@@ -195,7 +194,7 @@ let menus = [
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
     },
-
+ 
 ];
 
 export default class Example extends React.Component {
@@ -205,11 +204,43 @@ export default class Example extends React.Component {
       messages: [],
       typingText: null,
       isLoadingEarlier: false,
+      placeholder: 'Ketik namamu disini',
+      isQuickReply: false,
+      items: [
+    {
+       text:'Contoh 1',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Cari Inspirasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Rekomendasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Promo',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+ 
+],
     };
+
 
     this._isMounted = false;
     this.onSend = this.onSend.bind(this);
     this.onReceive = this.onReceive.bind(this);
+    this.onReceive2 = this.onReceive2.bind(this);
+    this.onReceive3 = this.onReceive2.bind(this);
     this.renderCustomActions = this.renderCustomActions.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
     this.renderCustomMenu = this.renderCustomMenu.bind(this);
@@ -220,6 +251,8 @@ export default class Example extends React.Component {
     this.onLoadEarlier = this.onLoadEarlier.bind(this);
     this.onPressButtonMenu = this.onPressButtonMenu.bind(this);
     this._isAlright = null;
+    this.renderQuickReply = this.renderQuickReply.bind(this);
+    this.onQuickReply = this.onQuickReply.bind(this);
   }
 
   componentWillMount() {
@@ -268,7 +301,7 @@ export default class Example extends React.Component {
 
   answerDemo(messages) {
     if (messages.length > 0) {
-      if ((messages[0].image || messages[0].location) || !this._isAlright) {
+      if ((messages[0].image || messages[0].location) || !this._isAlright || this._isAlright) {
         this.setState((previousState) => {
           return {
             typingText: 'Dian sedang mengetik...'
@@ -286,13 +319,15 @@ export default class Example extends React.Component {
             this.onReceive('My favorite place');
           } else if (messages[0].text == 'Catherine') {
           this.onReceive('Hai, Kak Catherine! Mau cari produk apa nih?');
-          this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.')
-
-          } else {
-            if (!this._isAlright) {
+          this.onReceive3('Dian sedang mengetik...')
+          this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.');
+          this.onReceive2('Ketik pencarian produk disini');
+          this.onQuickReply(true, menus1);
+          } else if (!this._isAlright) {
               this._isAlright = true;
-              this.onReceive('Alright');
-            }
+              this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
+              this.onReceive2('Ketik teks disini')
+            
           }
         }
       }
@@ -318,6 +353,31 @@ export default class Example extends React.Component {
             //avatar: 'https://facebook.github.io/react/img/logo_og.png',
           },
         }),     
+      };
+    });
+  }
+
+  onReceive2(text) {
+    this.setState((previousState) => {
+      return {
+        placeholder: text,
+      };
+    });
+  }
+
+  onReceive3(text) {
+    this.setState((previousState) => {
+      return {
+        typingText: text,
+      };
+    });
+  }
+
+  onQuickReply(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isQuickReply: bool,
+        items: array,
       };
     });
   }
@@ -393,7 +453,6 @@ export default class Example extends React.Component {
     return ( 
       <Composer
       {...props}
-      placeholder={'Ketik namamu disini'}
       placeholderTextColor={'#eba43b'}
       />
     );
@@ -414,6 +473,15 @@ export default class Example extends React.Component {
     );
   }
 
+  renderQuickReply(props) {
+    return (
+      <ScrollingButtonMenu
+        {...props}
+        style={{paddingBottom:9, paddingLeft: 8}}
+        onPress={this.onPressButtonMenu.bind(this)}
+      />
+    );
+  }
 
   renderSend(props) {
         return (
@@ -454,17 +522,20 @@ export default class Example extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <MyStatusBar backgroundColor="#5E8D48" barStyle="light-content" />
+      
+      <SafeAreaView style={styles.container} forceInset={{bottom: 'never'}}>
+        <StatusBar hidden={true} />
         <NavBar />
-        <ScrollingButtonMenu 
-          items={menus}
-          style={{padding:15}}
-        />
           <GiftedChat
             messages={this.state.messages}
             onSend={this.onSend}
             loadEarlier={this.state.loadEarlier}
+            placeholder={this.state.placeholder}
+            isQuickReply={this.state.isQuickReply}
+            items={this.state.items}
+            onReceive2={this.onReceive2}
+            onReceive3={this.onReceive2}
+            onQuickReply={this.onQuickReply}
             onLoadEarlier={this.onLoadEarlier}
             isLoadingEarlier={this.state.isLoadingEarlier}
 
@@ -475,6 +546,7 @@ export default class Example extends React.Component {
             renderMenu={this.renderCustomMenu}
             renderBubble={this.renderBubble}
             renderCustomView={this.renderCustomView}
+            renderQuickReply={this.renderQuickReply}
             renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
             renderSend={this.renderSend}
@@ -505,11 +577,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyStatusBar = ({backgroundColor, ...props}) => (
-  <View style={[styles.statusBar, { backgroundColor }]}>
-    <StatusBar translucent backgroundColor={backgroundColor} {...props} />
-  </View>
-);
+
 
 
 

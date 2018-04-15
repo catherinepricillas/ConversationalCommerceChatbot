@@ -323,6 +323,10 @@ export default class Example extends React.Component {
           this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.');
           this.onReceive2('Ketik pencarian produk disini');
           this.onQuickReply(true, menus1);
+          } else if (messages[0].text == 'Cari Inspirasi') {
+          this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
+          this.onReceive2('Ketik pencarian inspirasi disini');
+          this.onQuickReply(false, menus1);
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
@@ -383,7 +387,13 @@ export default class Example extends React.Component {
   }
 
   onPressButtonMenu(menu) {
-    console.log(menu.text);
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: menu.text,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
   }
 
   renderBubble(props) {
@@ -398,6 +408,7 @@ export default class Example extends React.Component {
       />
     );
   }
+
 
   renderCustomActions(props) {
     if (Platform.OS === 'ios') {

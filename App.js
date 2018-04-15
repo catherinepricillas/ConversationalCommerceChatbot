@@ -152,6 +152,7 @@ export default class App extends Component {
   }
 
 }*/
+
 import React from 'react';
 import {
   Platform,
@@ -163,7 +164,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar from './Navbar';
@@ -244,6 +245,7 @@ export default class Example extends React.Component {
     this.renderCustomActions = this.renderCustomActions.bind(this);
     this.renderComposer = this.renderComposer.bind(this);
     this.renderCustomMenu = this.renderCustomMenu.bind(this);
+    this.renderCategories = this.renderCategories.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderSystemMessage = this.renderSystemMessage.bind(this);
     this.renderSend = this.renderSend.bind(this);
@@ -319,7 +321,6 @@ export default class Example extends React.Component {
             this.onReceive('My favorite place');
           } else if (messages[0].text == 'Catherine') {
           this.onReceive('Hai, Kak Catherine! Mau cari produk apa nih?');
-          this.onReceive3('Dian sedang mengetik...')
           this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.');
           this.onReceive2('Ketik pencarian produk disini');
           this.onQuickReply(true, menus1);
@@ -330,7 +331,7 @@ export default class Example extends React.Component {
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
-              this.onReceive2('Ketik teks disini')
+              this.onReceive2('Ketik teks disini');
             
           }
         }
@@ -393,6 +394,7 @@ export default class Example extends React.Component {
     createdAt: new Date(),
     user: {_id: 1, name: 'User',
     }}];
+    isQuickReply: false;
     this.onSend(messages);
   }
 
@@ -492,6 +494,16 @@ export default class Example extends React.Component {
         onPress={this.onPressButtonMenu.bind(this)}
       />
     );
+  
+  }
+
+  renderCategories(props) {
+    return (
+      <ScrollCategories
+        {...props}
+        style={{paddingBottom:9, paddingLeft: 8}}
+      />
+    );
   }
 
   renderSend(props) {
@@ -558,6 +570,7 @@ export default class Example extends React.Component {
             renderBubble={this.renderBubble}
             renderCustomView={this.renderCustomView}
             renderQuickReply={this.renderQuickReply}
+            renderCategories={this.renderCategories}
             renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
             renderSend={this.renderSend}

@@ -172,13 +172,13 @@ import CustomMenu from './CustomMenu';
 
 let menus1 = [
     {
-       text:'Cari Produk',
+       text:'Cari produk',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
     },
     {
-       text:'Cari Inspirasi',
+       text:'Cari inspirasi',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
@@ -198,6 +198,78 @@ let menus1 = [
  
 ];
 
+let menus2 = [
+    {
+       text:'Pesta malam',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Pesta siang',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Interview kerja',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Dinner date',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus3 = [
+    {
+       text:'Ayah',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Ibu',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Pasangan',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Teman',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let categories1 = [
+    {
+       url:require('./shared/static/kado.png'),
+       text: 'Inspirasi kado',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/event.png'),
+       text: 'Produk berdasarkan event',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/new.png'),
+       text: 'Produk terbaru',
+       borderColor: '#327cce'
+    },
+];
+
 export default class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -207,33 +279,21 @@ export default class Example extends React.Component {
       isLoadingEarlier: false,
       placeholder: 'Ketik namamu disini',
       isQuickReply: false,
+      isCategories: false,
       items: [
-    {
-       text:'Contoh 1',
-       textColor:'#eba43b',
-       backgroundColor:'#FFFFFF',
-       borderColor:'#eba43b',
-    },
-    {
-       text:'Cari Inspirasi',
-       textColor:'#eba43b',
-       backgroundColor:'#FFFFFF',
-       borderColor:'#eba43b',
-    },
-    {
-       text:'Rekomendasi',
-       textColor:'#eba43b',
-       backgroundColor:'#FFFFFF',
-       borderColor:'#eba43b',
-    },
-    {
-       text:'Promo',
-       textColor:'#eba43b',
-       backgroundColor:'#FFFFFF',
-       borderColor:'#eba43b',
-    },
- 
-],
+        {
+           text:'Contoh 1',
+           textColor:'#eba43b',
+           backgroundColor:'#FFFFFF',
+           borderColor:'#eba43b',
+        },
+      ],
+      items2: [
+        {
+           url:"./shared/static/coba.png",
+           text: 'coba'
+        },
+      ],
     };
 
 
@@ -255,6 +315,8 @@ export default class Example extends React.Component {
     this._isAlright = null;
     this.renderQuickReply = this.renderQuickReply.bind(this);
     this.onQuickReply = this.onQuickReply.bind(this);
+    this.onCategories = this.onCategories.bind(this);
+    this.onPressCategories = this.onPressCategories.bind(this);
   }
 
   componentWillMount() {
@@ -324,14 +386,33 @@ export default class Example extends React.Component {
           this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.');
           this.onReceive2('Ketik pencarian produk disini');
           this.onQuickReply(true, menus1);
-          } else if (messages[0].text == 'Cari Inspirasi') {
+          this.onCategories(false, categories1);
+          } else if (messages[0].text == 'Cari inspirasi') {
           this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
           this.onReceive2('Ketik pencarian inspirasi disini');
           this.onQuickReply(false, menus1);
+          this.onCategories(true, categories1);
+          } else if (messages[0].text == 'Inspirasi hadiah') {
+          this.onReceive('Kamu mau cari hadiah buat siapa nih? Buat pasangan? Ibu? Ayah? Saudara? Atau teman?');
+          this.onQuickReply(true, menus3);
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          } else if (messages[0].text == 'Pesta malam') {
+          this.onReceive('Oke deh! ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(false, menus1);
+          } else if (messages[0].text == 'Produk berdasarkan event') {
+          this.onReceive('Event apanih yang mau Kakak datengin? Dian bisa bantu cariin buat banyak event loh, mulai dari pesta pernikahan sampai interview kerja.');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus2);
+          this.onReceive2('Ketik event lain disini');
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
               this.onReceive2('Ketik teks disini');
+              this.onQuickReply(false, menus1);
+              this.onCategories(false, categories1);
             
           }
         }
@@ -387,6 +468,15 @@ export default class Example extends React.Component {
     });
   }
 
+  onCategories(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isCategories: bool,
+        items2: array,
+      };
+    });
+  }
+
   onPressButtonMenu(menu) {
     const messages = [{
     _id: Math.round(Math.random() * 1000000),
@@ -394,7 +484,17 @@ export default class Example extends React.Component {
     createdAt: new Date(),
     user: {_id: 1, name: 'User',
     }}];
-    isQuickReply: false;
+    this.onQuickReply(false, []),
+    this.onSend(messages);
+  }
+
+  onPressCategories(menu) {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: menu.text,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
     this.onSend(messages);
   }
 
@@ -502,6 +602,7 @@ export default class Example extends React.Component {
       <ScrollCategories
         {...props}
         style={{paddingBottom:9, paddingLeft: 8}}
+        onPress={this.onPressCategories.bind(this)}
       />
     );
   }
@@ -555,10 +656,13 @@ export default class Example extends React.Component {
             loadEarlier={this.state.loadEarlier}
             placeholder={this.state.placeholder}
             isQuickReply={this.state.isQuickReply}
+            isCategories={this.state.isCategories}
             items={this.state.items}
+            items2={this.state.items2}
             onReceive2={this.onReceive2}
             onReceive3={this.onReceive2}
             onQuickReply={this.onQuickReply}
+            onCategories={this.onCategories}
             onLoadEarlier={this.onLoadEarlier}
             isLoadingEarlier={this.state.isLoadingEarlier}
 

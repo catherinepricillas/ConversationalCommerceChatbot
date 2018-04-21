@@ -164,7 +164,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar from './Navbar';
@@ -270,6 +270,39 @@ let categories1 = [
     },
 ];
 
+let catalog1 = [
+        {
+            title: 'Beautiful and dramatic Antelope Canyon',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/UYiroysl.jpg'
+        },
+        {
+            title: 'Earlier this morning, NYC',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+        },
+        {
+            title: 'White Pocket Sunset',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+        },
+        {
+            title: 'Acrocorinth, Greece',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+        },
+        {
+            title: 'The lone tree, majestic landscape of New Zealand',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+        },
+        {
+            title: 'Middle Earth, Germany',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/lceHsT6l.jpg'
+        },
+      ];
+
 export default class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -280,6 +313,8 @@ export default class Example extends React.Component {
       placeholder: 'Ketik namamu disini',
       isQuickReply: false,
       isCategories: false,
+      isCatalog: false,
+      slider1ActiveSlide: 0,
       items: [
         {
            text:'Contoh 1',
@@ -293,6 +328,38 @@ export default class Example extends React.Component {
            url:"./shared/static/coba.png",
            text: 'coba'
         },
+      ],
+      entries: [
+        {
+            title: 'Beautiful and dramatic Antelope Canyon',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/UYiroysl.jpg'
+        },
+        {
+            title: 'Earlier this morning, NYC',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+        },
+        {
+            title: 'White Pocket Sunset',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+        },
+        {
+            title: 'Acrocorinth, Greece',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+        },
+        {
+            title: 'The lone tree, majestic landscape of New Zealand',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+        },
+        {
+            title: 'Middle Earth, Germany',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/lceHsT6l.jpg'
+        }
       ],
     };
 
@@ -310,12 +377,14 @@ export default class Example extends React.Component {
     this.renderSystemMessage = this.renderSystemMessage.bind(this);
     this.renderSend = this.renderSend.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
+    this.renderCatalog = this.renderCatalog.bind(this);
     this.onLoadEarlier = this.onLoadEarlier.bind(this);
     this.onPressButtonMenu = this.onPressButtonMenu.bind(this);
     this._isAlright = null;
     this.renderQuickReply = this.renderQuickReply.bind(this);
     this.onQuickReply = this.onQuickReply.bind(this);
     this.onCategories = this.onCategories.bind(this);
+    this.onCatalog = this.onCatalog.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
   }
 
@@ -387,25 +456,30 @@ export default class Example extends React.Component {
           this.onReceive2('Ketik pencarian produk disini');
           this.onQuickReply(true, menus1);
           this.onCategories(false, categories1);
+          this.onCatalog(true, catalog1);
           } else if (messages[0].text == 'Cari inspirasi') {
           this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
           this.onReceive2('Ketik pencarian inspirasi disini');
           this.onQuickReply(false, menus1);
           this.onCategories(true, categories1);
+          this.onCatalog(false, catalog1);
           } else if (messages[0].text == 'Inspirasi hadiah') {
           this.onReceive('Kamu mau cari hadiah buat siapa nih? Buat pasangan? Ibu? Ayah? Saudara? Atau teman?');
           this.onQuickReply(true, menus3);
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
+          this.onCatalog(false, catalog1);
           } else if (messages[0].text == 'Pesta malam') {
           this.onReceive('Oke deh! ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
           this.onQuickReply(false, menus1);
+          this.onCatalog(true, catalog1);
           } else if (messages[0].text == 'Produk berdasarkan event') {
           this.onReceive('Event apanih yang mau Kakak datengin? Dian bisa bantu cariin buat banyak event loh, mulai dari pesta pernikahan sampai interview kerja.');
           this.onCategories(false, categories1);
           this.onQuickReply(true, menus2);
+          this.onCatalog(false, catalog1);
           this.onReceive2('Ketik event lain disini');
           } else if (!this._isAlright) {
               this._isAlright = true;
@@ -413,6 +487,7 @@ export default class Example extends React.Component {
               this.onReceive2('Ketik teks disini');
               this.onQuickReply(false, menus1);
               this.onCategories(false, categories1);
+              this.onCatalog(false, catalog1);
             
           }
         }
@@ -473,6 +548,15 @@ export default class Example extends React.Component {
       return {
         isCategories: bool,
         items2: array,
+      };
+    });
+  }
+
+  onCatalog(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isCatalog: bool,
+        entries: array,
       };
     });
   }
@@ -607,6 +691,16 @@ export default class Example extends React.Component {
     );
   }
 
+  renderCatalog(props) {
+    return (
+      <ScrollCatalog
+        {...props}
+        style={{paddingBottom:9, paddingLeft: 8}}
+      />
+    );
+  }
+
+
   renderSend(props) {
         return (
             <Send
@@ -657,12 +751,16 @@ export default class Example extends React.Component {
             placeholder={this.state.placeholder}
             isQuickReply={this.state.isQuickReply}
             isCategories={this.state.isCategories}
+            isCatalog={this.state.isCatalog}
+            slider1ActiveSlide={this.state.slider1ActiveSlide}
             items={this.state.items}
             items2={this.state.items2}
+            entries={this.state.entries}
             onReceive2={this.onReceive2}
             onReceive3={this.onReceive2}
             onQuickReply={this.onQuickReply}
             onCategories={this.onCategories}
+            onCatalog={this.onCatalog}
             onLoadEarlier={this.onLoadEarlier}
             isLoadingEarlier={this.state.isLoadingEarlier}
 

@@ -43,7 +43,7 @@ class ScrollingButtonMenu extends Component {
   }
   render() {
     return (
-        <View>
+        <View style={{backgroundColor: '#fff'}}>
           <ListView
               dataSource={ds.cloneWithRows(this.props.items)}
               enableEmptySections={true}

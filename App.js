@@ -255,6 +255,11 @@ let menus3 = [
 let categories1 = [
     {
        url:require('./shared/static/kado.png'),
+       text: 'Avatar',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/kado.png'),
        text: 'Inspirasi kado',
        borderColor: '#327cce',
     },
@@ -272,34 +277,46 @@ let categories1 = [
 
 let catalog1 = [
         {
-            title: 'Beautiful and dramatic Antelope Canyon',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/UYiroysl.jpg'
+            title: 'Dress Panjang Hijau Wanita',
+            subtitle: 'Rp. 500.000',
+            illustration: require('./shared/static/Dress.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
         {
-            title: 'Earlier this morning, NYC',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+            title: 'Dress Midi Krem Wanita',
+            subtitle: 'Rp. 400.000',
+            illustration: require('./shared/static/Gold.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
         {
-            title: 'White Pocket Sunset',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+            title: 'Dress Mini Periwinkle Wanita',
+            subtitle: 'Rp. 250.000',
+            illustration: require('./shared/static/Periwinkle.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
         {
-            title: 'Acrocorinth, Greece',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+            title: 'Dress Silver Pesta Wanita',
+            subtitle: 'Rp. 350.000',
+            illustration: require('./shared/static/Silver.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
         {
-            title: 'The lone tree, majestic landscape of New Zealand',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+            title: 'Dress Midi Lace Wanita',
+            subtitle: 'Rp. 350.000',
+            illustration: require('./shared/static/Lace.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
         {
-            title: 'Middle Earth, Germany',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/lceHsT6l.jpg'
+            title: 'Dress Midi Biru Wanita',
+            subtitle: 'Rp. 300.000',
+            illustration: require('./shared/static/BIrumidi.png'),
+            rating: require('./shared/static/five-stars.png'),
+        },
+        {
+            title: 'Dress Mini Berry Wanita',
+            subtitle: 'Rp. 250.000',
+            illustration: require('./shared/static/Berry.png'),
+            rating: require('./shared/static/five-stars.png'),
         },
       ];
 
@@ -386,6 +403,7 @@ export default class Example extends React.Component {
     this.onCategories = this.onCategories.bind(this);
     this.onCatalog = this.onCatalog.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
+    this.onPressCatalog = this.onPressCatalog.bind(this);
   }
 
   componentWillMount() {
@@ -582,6 +600,17 @@ export default class Example extends React.Component {
     this.onSend(messages);
   }
 
+  onPressCatalog(menu) {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: menu.title,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
+  }
+
+
   renderBubble(props) {
     return (
       <Bubble
@@ -695,7 +724,8 @@ export default class Example extends React.Component {
     return (
       <ScrollCatalog
         {...props}
-        style={{paddingBottom:9, paddingLeft: 8}}
+        style={{paddingBottom:86, paddingLeft: 20}}
+        onPress={this.onPressCatalog.bind(this)}
       />
     );
   }
@@ -735,8 +765,12 @@ export default class Example extends React.Component {
   }
 
   renderInputToolbar (props) {
-    return <InputToolbar {...props} containerStyle={{borderTopWidth: 0}} />
+    return (
+    <InputToolbar {...props} containerStyle={{borderTopWidth: 0}} />
+    );
   }
+
+
 
   render() {
     return (
@@ -786,6 +820,7 @@ export default class Example extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#327cce'
   },
   content: {
     flex: 1,

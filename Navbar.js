@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
 
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
 
 export default function NavBarCustom() {
   return (
+  	<SafeAreaView>
 	  <NavBar style={styles}>
 	  	<NavButton />
 	  	<NavButton />
@@ -68,5 +70,6 @@ export default function NavBarCustom() {
 	      />
 	    </NavButton>
 	  </NavBar>
+	</SafeAreaView>
   );
 }

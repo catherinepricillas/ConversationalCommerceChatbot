@@ -1,158 +1,3 @@
-/* import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}); */
-
-/*import React, { Component } from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
-
-import { GiftedChat } from 'react-native-gifted-chat';
-
-import messagesData from './data';
-import NavBar from './Navbar';
-import CustomView from './CustomView';
-import CustomActions from './CustomActions';
-
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-});
-
-const filterBotMessages = (message) => !message.system && message.user && message.user._id && message.user._id === 2;
-const findStep = (step) => (_, index) => index === step - 1;
-
-export default class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      messages: [],
-      step: 0,
-    };
-
-    this.onSend = this.onSend.bind(this);
-    this.parsePatterns = this.parsePatterns.bind(this);
-    this.renderCustomActions = this.renderCustomActions.bind(this);
-    this.renderFooter = this.renderFooter.bind(this);
-
-    
-  }
-
-  componentWillMount() {
-    // init with only system messages
-    this.setState({ messages: messagesData.filter((message) => message.system) });
-  }
-
-  onSend(messages = []) {
-    const step = this.state.step + 1;
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, [{ ...messages[0], sent: true, received: true }]),
-      step,
-    }));
-    setTimeout(() => this.botSend(step), 1500 + Math.round(Math.random() * 1000));
-  }
-
-  botSend(step = 0) {
-    const newMessage = messagesData
-      .reverse()
-      .filter(filterBotMessages)
-      .find(findStep(step));
-    if (newMessage) {
-      this.setState((previousState) => ({
-        messages: GiftedChat.append(previousState.messages, newMessage),
-      }));
-    }
-  }
-
-  parsePatterns(linkStyle) {
-    return [
-      {
-        pattern: /#(\w+)/,
-        style: { ...linkStyle, color: 'orange' },
-        onPress: () => Linking.openURL('http://gifted.chat'),
-      },
-    ];
-  }
-
-  renderCustomActions(props) {
-    if (Platform.OS === 'ios') {
-      return (
-        <CustomActions
-          {...props}
-        />
-      );
-    }
-    const options = {
-      'Action 1': (props) => {
-        alert('option 1');
-      },
-      'Action 2': (props) => {
-        alert('option 2');
-      },
-      'Cancel': () => {},
-    };
-    return (
-      <Actions
-        {...props}
-        options={options}
-      />
-    );
-  }
-
-  renderFooter(props) {
-    if (this.state.typingText) {
-      return (
-        <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>
-            {this.state.typingText}
-          </Text>
-        </View>
-      );
-    }
-    return null;
-  }
-
-
-  render() {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <NavBar />
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={this.onSend}
-          renderActions={this.renderCustomActions}
-          renderCustomView={CustomView}
-          user={{
-            _id: 1,
-          }}
-          parsePatterns={this.parsePatterns}
-          renderFooter={this.renderFooter}
-        />
-      </SafeAreaView>
-    );
-  }
-
-}*/
-
 import React from 'react';
 import {
   Platform,
@@ -162,6 +7,10 @@ import {
   SafeAreaView,
   StatusBar,
   Image,
+  Switch,
+  Button,
+  TouchableOpacity,
+  PropTypes
 } from 'react-native';
 
 import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog} from 'react-native-gifted-chat';
@@ -169,6 +18,9 @@ import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar from './Navbar';
 import CustomMenu from './CustomMenu';
+import { StackNavigator } from 'react-navigation';
+import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
+
 
 let menus1 = [
     {
@@ -320,7 +172,7 @@ let catalog1 = [
         },
       ];
 
-export default class Example extends React.Component {
+class Example extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -404,6 +256,10 @@ export default class Example extends React.Component {
     this.onCatalog = this.onCatalog.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
     this.onPressCatalog = this.onPressCatalog.bind(this);
+  }
+
+  static navigationOptions = {
+      header: null
   }
 
   componentWillMount() {
@@ -774,7 +630,6 @@ export default class Example extends React.Component {
 
   render() {
     return (
-      
       <SafeAreaView style={styles.container} forceInset={{bottom: 'never'}}>
         <StatusBar hidden={true} />
         <NavBar />
@@ -839,6 +694,171 @@ const styles = StyleSheet.create({
 });
 
 
+class Product extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Product Screen</Text>
+      </View>
+    );
+  }
+}
+
+class Payment extends React.Component {
+  state = {
+      detail: false};
+
+  _onChange = (formData) => console.log(JSON.stringify(formData, null, " "));
+  _onFocus = (field) => console.log("focusing", field);
+
+     static navigationOptions = {
+        title: 'Pembayaran',
+        headerTitleStyle :{textAlign: 'center',alignSelf:'center', color:'#fff'},
+        headerStyle:{
+            backgroundColor:'#327cce',
+        },
+        headerLeft: (
+          <Button
+            onPress={() => alert('This is a button!')}
+            title="Batal"
+            color="#fff"
+          />
+        ),
+    };
+
+  render() {
+
+    const detailHarga = this.state.detail ? (
+    <View style={s.detail}>
+      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
+      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 13}}>Ongkir: Rp 11.000</Text>
+    </View>
+      ) : false;
+
+    return (
+    <SafeAreaView style={s.container}>
+      <View style={s.harga}>
+      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 12}}>Total Tagihan:</Text>
+      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 18, fontWeight: 'bold'}}>Rp 611.000</Text>
+
+      </View>
+      {detailHarga}
+      <View style={s.space}>
+      </View>
+            <CreditCardInput
+
+              style={{marginTop:20}}
+              autoFocus
+
+              requiresName
+              requiresCVC
+
+              labelStyle={s.label}
+              inputStyle={s.input}
+              validColor={"black"}
+              invalidColor={"red"}
+              placeholderColor={"darkgray"}
+
+              onFocus={this._onFocus}
+              onChange={this._onChange} />
+          <TouchableOpacity
+          style={s.loginScreenButton}
+          onPress={() => navigate('Home')}
+          underlayColor='#fff'>
+          <Text style={s.loginText}>Bayar</Text>
+          </TouchableOpacity>
+          
+    </SafeAreaView>
+    );
+  }
+}
+
+const s = StyleSheet.create({
+  harga: {
+    backgroundColor: "#Fff",
+    marginTop: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginRight: 20,
+    height: 60,
+  },
+  detail: {
+    backgroundColor: "#Fff",
+    height: 60,
+    borderTopWidth: 0.5,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  space:
+  {
+    height:20,
+  },
+  switch: {
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  container: {
+    marginTop: 0,
+  },
+  label: {
+    color: "black",
+    fontSize: 12,
+  },
+  input: {
+    fontSize: 16,
+    color: "black",
+  },
+  loginScreenButton:{
+    marginRight:0,
+    width:375,
+    height: 50,
+    marginLeft:0,
+    marginTop:639,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#eba43b',
+    borderWidth: 1,
+    borderColor: '#eba43b',
+    position: 'absolute',
+  },
+  loginText:{
+      color:'#fff',
+      textAlign:'center',
+      paddingLeft : 10,
+      paddingRight : 10,
+      marginTop: 3,
+      fontSize: 16,
+      fontWeight: 'bold'
+  }
+});
+
+
+
+
+const RootStack = StackNavigator(
+  {
+    Home: {
+      screen: Example,
+    },
+    Product: {
+      screen: Product,
+    },
+    Payment: {
+      screen: Payment,
+    },
+  },
+  {
+    initialRouteName: 'Payment',
+  },
+);
+
+
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
 
 
 

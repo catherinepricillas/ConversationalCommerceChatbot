@@ -10,7 +10,8 @@ import {
   Switch,
   Button,
   TouchableOpacity,
-  PropTypes
+  PropTypes,
+  AppRegistry
 } from 'react-native';
 
 import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog} from 'react-native-gifted-chat';
@@ -456,10 +457,10 @@ class Example extends React.Component {
     this.onSend(messages);
   }
 
-  onPressCatalog(menu) {
+  onPressCatalog(text2) {
     const messages = [{
     _id: Math.round(Math.random() * 1000000),
-    text: menu.title,
+    text: text2,
     createdAt: new Date(),
     user: {_id: 1, name: 'User',
     }}];
@@ -662,6 +663,7 @@ class Example extends React.Component {
             renderCustomView={this.renderCustomView}
             renderQuickReply={this.renderQuickReply}
             renderCategories={this.renderCategories}
+            renderCatalog={this.renderCatalog}
             renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
             renderSend={this.renderSend}
@@ -719,7 +721,7 @@ class Payment extends React.Component {
         },
         headerLeft: (
           <Button
-            onPress={() => alert('This is a button!')}
+            onPress={() => this.props.navigation.navigate('Home')}
             title="Batal"
             color="#fff"
           />
@@ -763,7 +765,7 @@ class Payment extends React.Component {
               onChange={this._onChange} />
           <TouchableOpacity
           style={s.loginScreenButton}
-          onPress={() => navigate('Home')}
+          onPress={() => this.props.navigation.navigate('MyModal')}
           underlayColor='#fff'>
           <Text style={s.loginText}>Bayar</Text>
           </TouchableOpacity>
@@ -772,6 +774,76 @@ class Payment extends React.Component {
     );
   }
 }
+
+class ModalScreen extends React.Component {
+ state = {
+      detail: false};
+
+  _onChange = (formData) => console.log(JSON.stringify(formData, null, " "));
+  _onFocus = (field) => console.log("focusing", field);
+
+     static navigationOptions = {
+        title: 'Pembayaran',
+        headerTitleStyle :{textAlign: 'center',alignSelf:'center', color:'#fff'},
+        headerStyle:{
+            backgroundColor:'#327cce',
+        },
+        headerLeft: (
+          <Button
+            onPress={() => this.props.navigation.goBack()}
+            title="Batal"
+            color="#fff"
+          />
+        ),
+    };
+
+  render() {
+
+    const detailHarga = this.state.detail ? (
+    <View style={s.detail}>
+      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
+      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 13}}>Ongkir: Rp 11.000</Text>
+    </View>
+      ) : false;
+
+    return (
+    <SafeAreaView style={s.container}>
+      <View style={s.harga}>
+      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 12}}>Total Tagihan:</Text>
+      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 18, fontWeight: 'bold'}}>Rp 611.000</Text>
+
+      </View>
+      {detailHarga}
+      <View style={s.space}>
+      </View>
+            <CreditCardInput
+
+              style={{marginTop:20}}
+              autoFocus
+
+              requiresName
+              requiresCVC
+
+              labelStyle={s.label}
+              inputStyle={s.input}
+              validColor={"black"}
+              invalidColor={"red"}
+              placeholderColor={"darkgray"}
+
+              onFocus={this._onFocus}
+              onChange={this._onChange} />
+          <TouchableOpacity
+          style={s.loginScreenButton}
+          onPress={() => this.props.navigation.goBack()}
+          underlayColor='#fff'>
+          <Text style={s.loginText}>Bayar</Text>
+          </TouchableOpacity>
+          
+    </SafeAreaView>
+    );
+  }
+}
+
 
 const s = StyleSheet.create({
   harga: {
@@ -834,9 +906,33 @@ const s = StyleSheet.create({
 });
 
 
+const navbarPayment = StyleSheet.create({
+  
+  statusBar: {
+    backgroundColor: '#327cce',
+    height: 0,
+  },
+  navBar: {
+    backgroundColor: '#327cce',
+  },
+  title: {
+    alignSelf: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  buttonText: {
+    color: 'rgba(231, 37, 156, 0.5)',
+  },
+  navButton: {
+    flex: 1,
+    marginTop: 10,
+  },
+  image: {
+    width: 30,
+  },
+})
 
-
-const RootStack = StackNavigator(
+const MainStack = StackNavigator(
   {
     Home: {
       screen: Example,
@@ -849,8 +945,23 @@ const RootStack = StackNavigator(
     },
   },
   {
-    initialRouteName: 'Payment',
+    initialRouteName: 'Home',
   },
+);
+
+const RootStack = StackNavigator(
+  {
+    Main: {
+      screen: MainStack,
+    },
+    MyModal: {
+      screen: ModalScreen,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
 );
 
 
@@ -860,5 +971,5 @@ export default class App extends React.Component {
   }
 }
 
-
+AppRegistry.registerComponent('App', () => RootStack);
 

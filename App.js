@@ -8,19 +8,28 @@ import {
   StatusBar,
   Image,
   Switch,
-  Button,
   TouchableOpacity,
   PropTypes,
-  AppRegistry
+  AppRegistry,
+  Modal,
+  Dimensions,
+  TouchableWithoutFeedback,
+  AsyncStorage,
+  TouchableHighlight
 } from 'react-native';
-
+import Expo from 'expo';
 import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
-import NavBar from './Navbar';
+import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
 import CustomMenu from './CustomMenu';
 import { StackNavigator } from 'react-navigation';
 import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
+import { Container, Content, Button, Left, Right, Icon, Picker, Item, Grid, Col, Toast, Text as NBText } from 'native-base';
+import {default as ProductComponent} from './Product';
+import ImageSlider from 'react-native-image-slider';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+
 
 
 let menus1 = [
@@ -105,6 +114,83 @@ let menus3 = [
     },
 ];
 
+let menus4 = [
+    {
+       text:'Pria',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Wanita',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+
+let menus5 = [
+    {
+       text:'Aksesoris',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Pakaian',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Sepatu',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Seluruh outfit',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus6 = [
+    {
+       text:'⭐',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'⭐⭐',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'⭐⭐⭐',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'⭐⭐⭐⭐',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+        {
+       text:'⭐⭐⭐⭐⭐',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+
 let categories1 = [
     {
        url:require('./shared/static/kado.png'),
@@ -134,42 +220,49 @@ let catalog1 = [
             subtitle: 'Rp. 500.000',
             illustration: require('./shared/static/Dress.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
         {
             title: 'Dress Midi Krem Wanita',
             subtitle: 'Rp. 400.000',
             illustration: require('./shared/static/Gold.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: true,
         },
         {
             title: 'Dress Mini Periwinkle Wanita',
             subtitle: 'Rp. 250.000',
             illustration: require('./shared/static/Periwinkle.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
         {
             title: 'Dress Silver Pesta Wanita',
             subtitle: 'Rp. 350.000',
             illustration: require('./shared/static/Silver.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
         {
             title: 'Dress Midi Lace Wanita',
             subtitle: 'Rp. 350.000',
             illustration: require('./shared/static/Lace.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
         {
             title: 'Dress Midi Biru Wanita',
             subtitle: 'Rp. 300.000',
             illustration: require('./shared/static/BIrumidi.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
         {
             title: 'Dress Mini Berry Wanita',
             subtitle: 'Rp. 250.000',
             illustration: require('./shared/static/Berry.png'),
             rating: require('./shared/static/five-stars.png'),
+            love: false,
         },
       ];
 
@@ -185,6 +278,7 @@ class Example extends React.Component {
       isCategories: false,
       isCatalog: false,
       slider1ActiveSlide: 0,
+      modalVisible: false,
       items: [
         {
            text:'Contoh 1',
@@ -201,35 +295,10 @@ class Example extends React.Component {
       ],
       entries: [
         {
-            title: 'Beautiful and dramatic Antelope Canyon',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/UYiroysl.jpg'
+            title: '',
+            subtitle: '',
+            illustration: ''
         },
-        {
-            title: 'Earlier this morning, NYC',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
-        },
-        {
-            title: 'White Pocket Sunset',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
-        },
-        {
-            title: 'Acrocorinth, Greece',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
-        },
-        {
-            title: 'The lone tree, majestic landscape of New Zealand',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
-        },
-        {
-            title: 'Middle Earth, Germany',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/lceHsT6l.jpg'
-        }
       ],
     };
 
@@ -257,6 +326,9 @@ class Example extends React.Component {
     this.onCatalog = this.onCatalog.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
     this.onPressCatalog = this.onPressCatalog.bind(this);
+    this.onPressProductDetail = this.onPressProductDetail.bind(this);
+    this.onPressWishlist = this.onPressWishlist.bind(this);
+    this.onTriggerMessage = this.onTriggerMessage.bind(this);
   }
 
   static navigationOptions = {
@@ -274,6 +346,10 @@ class Example extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   onLoadEarlier() {
@@ -331,7 +407,7 @@ class Example extends React.Component {
           this.onReceive2('Ketik pencarian produk disini');
           this.onQuickReply(true, menus1);
           this.onCategories(false, categories1);
-          this.onCatalog(true, catalog1);
+          this.onCatalog(false, catalog1);
           } else if (messages[0].text == 'Cari inspirasi') {
           this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
           this.onReceive2('Ketik pencarian inspirasi disini');
@@ -345,6 +421,31 @@ class Example extends React.Component {
           this.onCategories(false, categories1);
           this.onCatalog(false, catalog1);
           } else if (messages[0].text == 'Pesta malam') {
+          this.onReceive('Oke Kak! Kakak mau cari inspirasinya untuk pakaian wanita atau pria?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus4);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Wanita') {
+          this.onReceive('Oke... Kakak mau cari apa nih? Aksesoris, pakaian, sepatu, atau seluruh outfit untuk pesta?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus5);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Favorit Dress Midi Biru Wanita') {
+          this.onReceive('Dress Midi Biru Wanita berhasil ditambahkan ke wishlist Kakak.');
+          this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Catherine bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(false, menus5);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Beri rating dan ulasan') {
+          this.onReceive('Menurut Kakak berapa rating untuk produk Dress Panjang Hijau Wanita?');
+          this.onReceive2('Ketik rating disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus6);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Pakaian') {
           this.onReceive('Oke deh! ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
@@ -467,6 +568,32 @@ class Example extends React.Component {
     this.onSend(messages);
   }
 
+  onPressWishlist(text2,idx) {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: text2,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
+  }
+
+
+  onPressProductDetail() {
+    this.setModalVisible(true);
+  }
+
+  onTriggerMessage(text2) {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: text2,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
+    this.setModalVisible(!this.state.modalVisible);
+  }
+
 
   renderBubble(props) {
     return (
@@ -583,6 +710,8 @@ class Example extends React.Component {
         {...props}
         style={{paddingBottom:86, paddingLeft: 20}}
         onPress={this.onPressCatalog.bind(this)}
+        onPress2={this.onPressProductDetail.bind(this)}
+        onPress3={this.onPressWishlist.bind(this)}
       />
     );
   }
@@ -630,10 +759,107 @@ class Example extends React.Component {
 
 
   render() {
+
+    const detailHarga = this.state.detail ? (
+    <View style={s.detail}>
+      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
+      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 13}}>Ongkir: Rp 11.000</Text>
+    </View>
+      ) : false;
+
     return (
-      <SafeAreaView style={styles.container} forceInset={{bottom: 'never'}}>
-        <StatusBar hidden={true} />
-        <NavBar />
+      <SafeAreaView style={styles.container}>
+            <NavBar style={navbarPayment}>
+                <NavButton />
+                <NavButton />
+                <NavButton />
+                <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+                <NavTitle style={navbarPayment.title}>
+                  {"     Dian"}
+                </NavTitle>
+                <NavButton />
+                <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+              <NavButton />
+                <NavButton style={navbarPayment.navButton}>
+                  <Image style={navbarPayment.image}
+                    resizeMode={"contain"}
+                    source={require('./shared/static/ic_search_white.png')}
+                  />
+                </NavButton>
+                <NavButton style={navbarPayment.navButton}>
+                  <Image style={navbarPayment.image}
+                    resizeMode={"contain"}
+                    source={require('./shared/static/ic_settings_white.png')}
+                  />
+                </NavButton>
+            </NavBar>
+          <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}>
+
+          <SafeAreaView style={styles.container}>
+          <NavBar style={navbarPayment}>
+                <NavButton style={navbarPayment.navButton} onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                  <Image style={navbarPayment.image}
+                    resizeMode={"contain"}
+                    source={require('./shared/static/ic_close_white.png')}
+                  />
+                </NavButton>
+                <NavTitle style={navbarPayment.title}>
+                  {"Pembayaran"}
+                </NavTitle>
+                <NavButton />
+            </NavBar>
+            <View style={s.container}>
+            <View style={s.harga}>
+            <Text style={{marginLeft: 15, marginTop: 11,fontSize: 12}}>Total Tagihan:</Text>
+            <Text style={{marginLeft: 15, marginTop: 2,fontSize: 18, fontWeight: 'bold'}}>Rp 611.000</Text>
+
+            </View>
+            {detailHarga}
+            <View style={s.space}>
+            </View>
+                  <CreditCardInput
+
+                    style={{marginTop:20}}
+                    autoFocus
+
+                    requiresName
+                    requiresCVC
+
+                    labelStyle={s.label}
+                    inputStyle={s.input}
+                    validColor={"black"}
+                    invalidColor={"red"}
+                    placeholderColor={"darkgray"}
+
+                    onFocus={this._onFocus}
+                    onChange={this._onChange} />
+                <TouchableOpacity
+                style={s.loginScreenButton}
+                onPress={() => {
+                  this.onTriggerMessage('Beli produk')
+                }}
+                underlayColor='#fff'>
+                <Text style={s.loginText}>Bayar</Text>
+                </TouchableOpacity>
+                </View>
+          </SafeAreaView>
+        </Modal>
           <GiftedChat
             messages={this.state.messages}
             onSend={this.onSend}
@@ -650,12 +876,12 @@ class Example extends React.Component {
             onReceive3={this.onReceive2}
             onQuickReply={this.onQuickReply}
             onCategories={this.onCategories}
+            onTriggerMessage={this.onTriggerMessage}
             onCatalog={this.onCatalog}
             onLoadEarlier={this.onLoadEarlier}
             isLoadingEarlier={this.state.isLoadingEarlier}
-
             user={{
-              _id: 1, // sent messages should have same user._id
+              _id: 1, 
             }}
             renderActions={this.renderCustomActions}
             renderMenu={this.renderCustomMenu}
@@ -697,12 +923,297 @@ const styles = StyleSheet.create({
 
 
 class Product extends React.Component {
+constructor(props) {
+    super(props);
+    this.state = {
+      product: {},
+      activeSlide: 0,
+      quantity: 1,
+      selectedColor: '',
+      selectedSize: '',
+      isReady:false,
+    };
+  }
+
+ async componentWillMount() {
+    this.setState({product: dummyProduct});
+    await Expo.Font.loadAsync({
+    Roboto: require("native-base/Fonts/Roboto.ttf"),
+    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    });
+    this.setState({ isReady: true });
+  }
+
+  componentDidMount() {
+    /* Select the default color and size (first ones) */
+    let defColor = this.state.product.colors[0];
+    let defSize = this.state.product.sizes[0];
+    this.setState({
+      selectedColor: defColor,
+      selectedSize: defSize
+    });
+  }
+
   render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Product Screen</Text>
-      </View>
+    if (!this.state.isReady) {
+    return <Expo.AppLoading />;
+    }
+
+    let images = this.state.product.images;
+
+    return(
+      <Container style={{backgroundColor: '#fdfdfd'}}>
+        <Content>
+          <Carousel
+              ref={(carousel) => { this._carousel = carousel; }}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width}
+              onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+              enableSnap={true}
+              data={images}
+              renderItem={this.renderImages}
+            />
+            <Pagination
+              dotsLength={this.state.product.images.length}
+              activeDotIndex={this.state.activeSlide}
+              containerStyle={{ backgroundColor: 'transparent',paddingTop: -10, paddingBottom: 0, marginTop: -30, marginBottom:10}}
+              dotStyle={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  marginHorizontal: 2,
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)'
+              }}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
+            <Grid>
+              <Col size={2}>
+                <Text style={{fontSize: 20}}>{this.state.product.title}</Text>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.state.product.price}</Text>
+              </Col>
+            </Grid>
+            <Grid style={{marginTop: 10}}>
+              <Col>
+                  <TouchableOpacity>
+                    <Text style={{fontSize: 14, color: "#2d7df6"}}>⭐⭐⭐⭐⭐ (5 Ulasan)</Text>
+                  </TouchableOpacity>
+              </Col>
+            </Grid>           
+            <Grid style={{marginTop: 10}}>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Warna:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <Picker
+                  mode="dropdown"
+                  placeholder="Pilih Warna"
+                  note={true}
+                  selectedValue={this.state.selectedColor}
+                  onValueChange={(color) => this.setState({selectedColor: color})}
+                >
+                  {this.renderColors()}
+                </Picker>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Ukuran:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <Picker
+                  mode="dropdown"
+                  placeholder="Pilih Ukuran"
+                  note={true}
+                  selectedValue={this.state.selectedSize}
+                  onValueChange={(size) => this.setState({selectedSize: size})}
+                >
+                  {this.renderSize()}
+                </Picker>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Jumlah:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity>1 ? this.state.quantity-1 : 1})} >
+                    <Icon name='ios-remove-outline' />
+                  </Button>
+                  <View style={{flex: 4, justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30}}>
+                    <Text style={{fontSize: 18}}>{this.state.quantity}</Text>
+                  </View>
+                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity+1})}>
+                    <Icon name='ios-add' />
+                  </Button>
+                </View>
+              </Col>
+            </Grid>
+            <Grid style={{marginTop: 15}}>
+              <Col size={3}>
+                <Button block onPress={this.addToCart.bind(this)}>
+                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>Beli Produk</Text>
+                </Button>
+              </Col>
+              <Col>
+              <Button block onPress={this.addToWishlist.bind(this)} icon transparent style={{backgroundColor: '#fdfdfd'}}>
+                <Icon name='ios-heart' />
+              </Button>
+              </Col>
+            </Grid>
+            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+              <Text style={{marginBottom: 5}}>Deskripsi</Text>
+              <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+              <NBText note>
+                {this.state.product.description}
+              </NBText>
+            </View>
+          </View>
+          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
+            <Text style={{marginBottom: 5}}>Rating dan Ulasan</Text>
+            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+            {this.renderSimilairs()}
+          </View>
+          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
+            <Text style={{marginBottom: 5}}>Informasi Penjual</Text>
+            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+          </View>
+        </Content>
+      </Container>
     );
+  }
+
+  renderImages({item, index}) {
+    return(
+          <TouchableWithoutFeedback
+            key={index}
+          >
+            <Image
+              source={{uri: item}}
+              style={{width: Dimensions.get('window').width, height: 350}}
+              resizeMode="cover"
+            />
+          </TouchableWithoutFeedback>
+      );
+  }
+
+  renderColors() {
+    let colors = [];
+    this.state.product.colors.map((color, i) => {
+      colors.push(
+        <Item key={i} label={color} value={color} />
+      );
+    });
+    return colors;
+  }
+
+  renderSize() {
+    let size = [];
+    this.state.product.sizes.map((s, i) => {
+      size.push(
+        <Item key={i} label={s} value={s} />
+      );
+    });
+    return size;
+  }
+
+  renderSimilairs() {
+    let items = [];
+    let stateItems = this.state.product.similarItems;
+    for(var i=0; i<stateItems.length; i+=2 ) {
+      if(stateItems[i+1]) {
+        items.push(
+          <Grid key={i}>
+            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
+            <ProductComponent key={stateItems[i+1].id} product={stateItems[i+1]} isRight />
+          </Grid>
+        );
+      }
+      else {
+        items.push(
+          <Grid key={i}>
+            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
+            <Col key={i+1} />
+          </Grid>
+        );
+      }
+    }
+    return items;
+  }
+
+  openGallery(pos) {
+    Actions.imageGallery({images: this.state.product.images, position: pos});
+  }
+
+  addToCart() {
+    var product = this.state.product;
+    product['color'] = this.state.selectedColor;
+    product['size'] = this.state.selectedSize;
+    product['quantity'] = this.state.quantity;
+    AsyncStorage.getItem("CART", (err, res) => {
+      if(!res) AsyncStorage.setItem("CART",JSON.stringify([product]));
+      else {
+        var items = JSON.parse(res);
+        items.push(product);
+        AsyncStorage.setItem("CART",JSON.stringify(items));
+      }
+      Toast.show({
+        text: 'Product added to your cart !',
+        position: 'bottom',
+        type: 'success',
+        buttonText: 'Dismiss',
+        duration: 3000
+      });
+    });
+  }
+
+  addToWishlist() {
+    var product = this.state.product;
+    var success = true;
+    AsyncStorage.getItem("WISHLIST", (err, res) => {
+      if(!res) AsyncStorage.setItem("WISHLIST",JSON.stringify([product]));
+      else {
+        var items = JSON.parse(res);
+        if(this.search(items, product)) {
+          success = false
+        }
+        else {
+          items.push(product);
+          AsyncStorage.setItem("WISHLIST",JSON.stringify(items));
+        }
+      }
+      if(success) {
+        Toast.show({
+          text: 'Product added to your wishlist !',
+          position: 'bottom',
+          type: 'success',
+          buttonText: 'Dismiss',
+          duration: 3000
+        });
+      }
+      else {
+        Toast.show({
+          text: 'This product already exist in your wishlist !',
+          position: 'bottom',
+          type: 'danger',
+          buttonText: 'Dismiss',
+          duration: 3000
+        });
+      }
+    });
   }
 }
 
@@ -776,78 +1287,14 @@ class Payment extends React.Component {
 }
 
 class ModalScreen extends React.Component {
- state = {
-      detail: false};
+   
 
-  _onChange = (formData) => console.log(JSON.stringify(formData, null, " "));
-  _onFocus = (field) => console.log("focusing", field);
-
-     static navigationOptions = {
-        title: 'Pembayaran',
-        headerTitleStyle :{textAlign: 'center',alignSelf:'center', color:'#fff'},
-        headerStyle:{
-            backgroundColor:'#327cce',
-        },
-        headerLeft: (
-          <Button
-            onPress={() => this.props.navigation.goBack()}
-            title="Batal"
-            color="#fff"
-          />
-        ),
-    };
-
-  render() {
-
-    const detailHarga = this.state.detail ? (
-    <View style={s.detail}>
-      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
-      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 13}}>Ongkir: Rp 11.000</Text>
-    </View>
-      ) : false;
-
-    return (
-    <SafeAreaView style={s.container}>
-      <View style={s.harga}>
-      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 12}}>Total Tagihan:</Text>
-      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 18, fontWeight: 'bold'}}>Rp 611.000</Text>
-
-      </View>
-      {detailHarga}
-      <View style={s.space}>
-      </View>
-            <CreditCardInput
-
-              style={{marginTop:20}}
-              autoFocus
-
-              requiresName
-              requiresCVC
-
-              labelStyle={s.label}
-              inputStyle={s.input}
-              validColor={"black"}
-              invalidColor={"red"}
-              placeholderColor={"darkgray"}
-
-              onFocus={this._onFocus}
-              onChange={this._onChange} />
-          <TouchableOpacity
-          style={s.loginScreenButton}
-          onPress={() => this.props.navigation.goBack()}
-          underlayColor='#fff'>
-          <Text style={s.loginText}>Bayar</Text>
-          </TouchableOpacity>
-          
-    </SafeAreaView>
-    );
-  }
 }
 
 
 const s = StyleSheet.create({
   harga: {
-    backgroundColor: "#Fff",
+    backgroundColor: "#fff",
     marginTop: 20,
     marginLeft: 20,
     marginRight: 20,
@@ -872,6 +1319,8 @@ const s = StyleSheet.create({
   },
   container: {
     marginTop: 0,
+    backgroundColor: "#efeff4",
+    height:800,
   },
   label: {
     color: "black",
@@ -905,6 +1354,27 @@ const s = StyleSheet.create({
   }
 });
 
+
+const dummyProduct = {
+  id: 2,
+  title: 'Dress Panjang Hijau Wanita',
+  description: "Pellentesque orci lectus, bibendum iaculis aliquet id, ullamcorper nec ipsum. In laoreet ligula vitae tristique viverra. Suspendisse augue nunc, laoreet in arcu ut, vulputate malesuada justo. Donec porttitor elit justo, sed lobortis nulla interdum et. Sed lobortis sapien ut augue condimentum, eget ullamcorper nibh lobortis. Cras ut bibendum libero. Quisque in nisl nisl. Mauris vestibulum leo nec pellentesque sollicitudin. Pellentesque lacus eros, venenatis in iaculis nec, luctus at eros. Phasellus id gravida magna. Maecenas fringilla auctor diam consectetur placerat. Suspendisse non convallis ligula. Aenean sagittis eu erat quis efficitur. Maecenas volutpat erat ac varius bibendum. Ut tincidunt, sem id tristique commodo, nunc diam suscipit lectus, vel",
+  image: 'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,w_358,x_150/v1500465309/pexels-photo-206470_nwtgor.jpg',
+  images: [
+    'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,w_358,x_150/v1500465309/pexels-photo-206470_nwtgor.jpg',
+    'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,x_226,y_54/v1500465309/pexels-photo-521197_hg8kak.jpg',
+    'http://res.cloudinary.com/atf19/image/upload/c_crop,g_face,h_250,x_248/v1500465308/fashion-men-s-individuality-black-and-white-157675_wnctss.jpg',
+    'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250/v1500465308/pexels-photo-179909_ddlsmt.jpg'
+  ],
+  price: 'Rp 600.000',
+  colors: ['Hijau'],
+  sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+  category: 'Pesta Wanita',
+  similarItems: [
+    {id: 10, title: 'V NECK T-SHIRT', price: '29$', image: 'http://res.cloudinary.com/atf19/image/upload/c_crop,g_face,h_250,x_248/v1500465308/fashion-men-s-individuality-black-and-white-157675_wnctss.jpg'},
+    {id: 11, title: 'V NECK T-SHIRT', price: '29$', image: 'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250/v1500465308/pexels-photo-179909_ddlsmt.jpg'},
+  ]
+};
 
 const navbarPayment = StyleSheet.create({
   

@@ -38,34 +38,7 @@ export default class CustomMenu extends React.Component {
   }
 
   onMenuPress() {
-    const options = ['Gambar', 'Kirim Lokasi', 'Tutup'];
-    const cancelButtonIndex = options.length - 1;
-    this.context.actionSheet().showActionSheetWithOptions({
-      options,
-      cancelButtonIndex,
-    },
-    (buttonIndex) => {
-      switch (buttonIndex) {
-        case 0:
-          this.setModalVisible(true);
-          break;
-        case 1:
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.props.onSend({
-                location: {
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                },
-              });
-            },
-            (error) => alert(error.message),
-            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-          );
-          break;
-        default:
-      }
-    });
+    this.props.onPress();
   }
 
   selectImages(images) {
@@ -134,7 +107,7 @@ export default class CustomMenu extends React.Component {
     return (
       <TouchableOpacity
         style={[styles.container, this.props.containerStyle]}
-        onPress={this.onMenuPress}
+        onPress={()=>this.onMenuPress()}
       >
         <Modal
           animationType={'slide'}

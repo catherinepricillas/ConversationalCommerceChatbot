@@ -18,7 +18,7 @@ import {
   TouchableHighlight
 } from 'react-native';
 import Expo from 'expo';
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton, YellowBox, PersistentMenu} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
@@ -30,7 +30,7 @@ import {default as ProductComponent} from './Product';
 import ImageSlider from 'react-native-image-slider';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
-
+console.disableYellowBox = true;
 
 let menus1 = [
     {
@@ -275,6 +275,7 @@ class Example extends React.Component {
       isLoadingEarlier: false,
       placeholder: 'Ketik namamu disini',
       isQuickReply: false,
+      isMenu: false,
       isCategories: false,
       isPayment: false,
       isCatalog: false,
@@ -328,9 +329,13 @@ class Example extends React.Component {
     this.renderCatalog = this.renderCatalog.bind(this);
     this.onLoadEarlier = this.onLoadEarlier.bind(this);
     this.onPressButtonMenu = this.onPressButtonMenu.bind(this);
+    this.onPressPersistentMenu = this.onPressPersistentMenu.bind(this);
+    this.onPressMenu = this.onPressMenu.bind(this);
     this._isAlright = null;
     this.renderQuickReply = this.renderQuickReply.bind(this);
+    this.renderPersistentMenu = this.renderPersistentMenu.bind(this);
     this.onQuickReply = this.onQuickReply.bind(this);
+    this.onMenu = this.onMenu.bind(this);
     this.onCategories = this.onCategories.bind(this);
     this.onPayment = this.onPayment.bind(this);
     this.onCatalog = this.onCatalog.bind(this);
@@ -558,6 +563,15 @@ class Example extends React.Component {
     });
   }
 
+  onMenu(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isMenu: bool,
+        items: array,
+      };
+    });
+  }
+
   onCategories(bool, array) {
     this.setState((previousState) => {
       return {
@@ -593,6 +607,21 @@ class Example extends React.Component {
     }}];
     this.onQuickReply(false, []),
     this.onSend(messages);
+  }
+
+  onPressPersistentMenu(text2) {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: text2,
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
+  }
+
+  onPressMenu() {
+    var menu= this.state.isMenu;
+    this.onMenu(!menu, menus1);
   }
 
   onPressCategories(menu) {
@@ -690,6 +719,7 @@ class Example extends React.Component {
       return (
         <CustomMenu
           {...props}
+         onPress={this.onPressMenu.bind(this)}
         />
       );
     }
@@ -720,6 +750,7 @@ class Example extends React.Component {
   }
 
 
+
   renderSystemMessage(props) {
     return (
       <SystemMessage
@@ -740,6 +771,16 @@ class Example extends React.Component {
         {...props}
         style={{paddingBottom:9, paddingLeft: 8}}
         onPress={this.onPressButtonMenu.bind(this)}
+      />
+    );
+  
+  }
+
+  renderPersistentMenu(props) {
+    return (
+      <PersistentMenu
+        {...props}
+        onPress={this.onPressPersistentMenu.bind(this)}
       />
     );
   
@@ -1202,6 +1243,7 @@ class Example extends React.Component {
             loadEarlier={this.state.loadEarlier}
             placeholder={this.state.placeholder}
             isQuickReply={this.state.isQuickReply}
+            isMenu={this.state.isMenu}
             isCategories={this.state.isCategories}
             isPayment={this.state.isPayment}
             isCatalog={this.state.isCatalog}
@@ -1212,6 +1254,7 @@ class Example extends React.Component {
             onReceive2={this.onReceive2}
             onReceive3={this.onReceive2}
             onQuickReply={this.onQuickReply}
+            onMenu={this.onMenu}
             onCategories={this.onCategories}
             onTriggerMessage={this.onTriggerMessage}
             onCatalog={this.onCatalog}
@@ -1225,6 +1268,7 @@ class Example extends React.Component {
             renderBubble={this.renderBubble}
             renderCustomView={this.renderCustomView}
             renderQuickReply={this.renderQuickReply}
+            renderPersistentMenu={this.renderPersistentMenu}
             renderCategories={this.renderCategories}
             renderPayButton={this.renderPayButton}
             renderCatalog={this.renderCatalog}
@@ -1258,302 +1302,6 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
 });
-
-
-class Product extends React.Component {
-constructor(props) {
-    super(props);
-    this.state = {
-      product: {},
-      activeSlide: 0,
-      quantity: 1,
-      selectedColor: '',
-      selectedSize: '',
-      isReady:false,
-    };
-  }
-
- async componentWillMount() {
-    this.setState({product: dummyProduct});
-    await Expo.Font.loadAsync({
-    Roboto: require("native-base/Fonts/Roboto.ttf"),
-    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-    Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
-    });
-    this.setState({ isReady: true });
-  }
-
-  componentDidMount() {
-    /* Select the default color and size (first ones) */
-    let defColor = this.state.product.colors[0];
-    let defSize = this.state.product.sizes[0];
-    this.setState({
-      selectedColor: defColor,
-      selectedSize: defSize
-    });
-  }
-
-  render() {
-    if (!this.state.isReady) {
-    return <Expo.AppLoading />;
-    }
-
-    let images = this.state.product.images;
-
-    return(
-      <Container style={{backgroundColor: '#fdfdfd'}}>
-        <Content>
-          <Carousel
-              ref={(carousel) => { this._carousel = carousel; }}
-              sliderWidth={Dimensions.get('window').width}
-              itemWidth={Dimensions.get('window').width}
-              onSnapToItem={(index) => this.setState({ activeSlide: index }) }
-              enableSnap={true}
-              data={images}
-              renderItem={this.renderImages}
-            />
-            <Pagination
-              dotsLength={this.state.product.images.length}
-              activeDotIndex={this.state.activeSlide}
-              containerStyle={{ backgroundColor: 'transparent',paddingTop: -10, paddingBottom: 0, marginTop: -30, marginBottom:10}}
-              dotStyle={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  marginHorizontal: 2,
-                  backgroundColor: 'rgba(255, 255, 255, 0.92)'
-              }}
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
-            />
-          <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
-            <Grid>
-              <Col size={2}>
-                <Text style={{fontSize: 20}}>{this.state.product.title}</Text>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.state.product.price}</Text>
-              </Col>
-            </Grid>
-            <Grid style={{marginTop: 10}}>
-              <Col>
-                  <TouchableOpacity>
-                    <Text style={{fontSize: 14, color: "#2d7df6"}}>⭐⭐⭐⭐⭐ (5 Ulasan)</Text>
-                  </TouchableOpacity>
-              </Col>
-            </Grid>           
-            <Grid style={{marginTop: 10}}>
-              <Col>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  <Text>Warna:</Text>
-                </View>
-              </Col>
-              <Col size={3}>
-                <Picker
-                  mode="dropdown"
-                  placeholder="Pilih Warna"
-                  note={true}
-                  selectedValue={this.state.selectedColor}
-                  onValueChange={(color) => this.setState({selectedColor: color})}
-                >
-                  {this.renderColors()}
-                </Picker>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  <Text>Ukuran:</Text>
-                </View>
-              </Col>
-              <Col size={3}>
-                <Picker
-                  mode="dropdown"
-                  placeholder="Pilih Ukuran"
-                  note={true}
-                  selectedValue={this.state.selectedSize}
-                  onValueChange={(size) => this.setState({selectedSize: size})}
-                >
-                  {this.renderSize()}
-                </Picker>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  <Text>Jumlah:</Text>
-                </View>
-              </Col>
-              <Col size={3}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity>1 ? this.state.quantity-1 : 1})} >
-                    <Icon name='ios-remove-outline' />
-                  </Button>
-                  <View style={{flex: 4, justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30}}>
-                    <Text style={{fontSize: 18}}>{this.state.quantity}</Text>
-                  </View>
-                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity+1})}>
-                    <Icon name='ios-add' />
-                  </Button>
-                </View>
-              </Col>
-            </Grid>
-            <Grid style={{marginTop: 15}}>
-              <Col size={3}>
-                <Button block onPress={this.addToCart.bind(this)}>
-                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>Beli Produk</Text>
-                </Button>
-              </Col>
-              <Col>
-              <Button block onPress={this.addToWishlist.bind(this)} icon transparent style={{backgroundColor: '#fdfdfd'}}>
-                <Icon name='ios-heart' />
-              </Button>
-              </Col>
-            </Grid>
-            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
-              <Text style={{marginBottom: 5}}>Deskripsi</Text>
-              <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
-              <NBText note>
-                {this.state.product.description}
-              </NBText>
-            </View>
-          </View>
-          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
-            <Text style={{marginBottom: 5}}>Rating dan Ulasan</Text>
-            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
-            {this.renderSimilairs()}
-          </View>
-          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
-            <Text style={{marginBottom: 5}}>Informasi Penjual</Text>
-            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
-          </View>
-        </Content>
-      </Container>
-    );
-  }
-
-  renderImages({item, index}) {
-    return(
-          <TouchableWithoutFeedback
-            key={index}
-          >
-            <Image
-              source={{uri: item}}
-              style={{width: Dimensions.get('window').width, height: 350}}
-              resizeMode="cover"
-            />
-          </TouchableWithoutFeedback>
-      );
-  }
-
-  renderColors() {
-    let colors = [];
-    this.state.product.colors.map((color, i) => {
-      colors.push(
-        <Item key={i} label={color} value={color} />
-      );
-    });
-    return colors;
-  }
-
-  renderSize() {
-    let size = [];
-    this.state.product.sizes.map((s, i) => {
-      size.push(
-        <Item key={i} label={s} value={s} />
-      );
-    });
-    return size;
-  }
-
-  renderSimilairs() {
-    let items = [];
-    let stateItems = this.state.product.similarItems;
-    for(var i=0; i<stateItems.length; i+=2 ) {
-      if(stateItems[i+1]) {
-        items.push(
-          <Grid key={i}>
-            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
-            <ProductComponent key={stateItems[i+1].id} product={stateItems[i+1]} isRight />
-          </Grid>
-        );
-      }
-      else {
-        items.push(
-          <Grid key={i}>
-            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
-            <Col key={i+1} />
-          </Grid>
-        );
-      }
-    }
-    return items;
-  }
-
-  openGallery(pos) {
-    Actions.imageGallery({images: this.state.product.images, position: pos});
-  }
-
-  addToCart() {
-    var product = this.state.product;
-    product['color'] = this.state.selectedColor;
-    product['size'] = this.state.selectedSize;
-    product['quantity'] = this.state.quantity;
-    AsyncStorage.getItem("CART", (err, res) => {
-      if(!res) AsyncStorage.setItem("CART",JSON.stringify([product]));
-      else {
-        var items = JSON.parse(res);
-        items.push(product);
-        AsyncStorage.setItem("CART",JSON.stringify(items));
-      }
-      Toast.show({
-        text: 'Product added to your cart !',
-        position: 'bottom',
-        type: 'success',
-        buttonText: 'Dismiss',
-        duration: 3000
-      });
-    });
-  }
-
-  addToWishlist() {
-    var product = this.state.product;
-    var success = true;
-    AsyncStorage.getItem("WISHLIST", (err, res) => {
-      if(!res) AsyncStorage.setItem("WISHLIST",JSON.stringify([product]));
-      else {
-        var items = JSON.parse(res);
-        if(this.search(items, product)) {
-          success = false
-        }
-        else {
-          items.push(product);
-          AsyncStorage.setItem("WISHLIST",JSON.stringify(items));
-        }
-      }
-      if(success) {
-        Toast.show({
-          text: 'Product added to your wishlist !',
-          position: 'bottom',
-          type: 'success',
-          buttonText: 'Dismiss',
-          duration: 3000
-        });
-      }
-      else {
-        Toast.show({
-          text: 'This product already exist in your wishlist !',
-          position: 'bottom',
-          type: 'danger',
-          buttonText: 'Dismiss',
-          duration: 3000
-        });
-      }
-    });
-  }
-}
 
 class ModalScreen extends React.Component {
    

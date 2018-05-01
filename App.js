@@ -18,7 +18,7 @@ import {
   TouchableHighlight
 } from 'react-native';
 import Expo from 'expo';
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
@@ -276,9 +276,17 @@ class Example extends React.Component {
       placeholder: 'Ketik namamu disini',
       isQuickReply: false,
       isCategories: false,
+      isPayment: false,
       isCatalog: false,
       slider1ActiveSlide: 0,
       modalVisible: false,
+      modal2Visible: false,
+      product: {},
+      activeSlide: 0,
+      quantity: 1,
+      selectedColor: '',
+      selectedSize: '',
+      isReady:false,
       items: [
         {
            text:'Contoh 1',
@@ -312,6 +320,7 @@ class Example extends React.Component {
     this.renderComposer = this.renderComposer.bind(this);
     this.renderCustomMenu = this.renderCustomMenu.bind(this);
     this.renderCategories = this.renderCategories.bind(this);
+    this.renderPayButton = this.renderPayButton.bind(this);
     this.renderBubble = this.renderBubble.bind(this);
     this.renderSystemMessage = this.renderSystemMessage.bind(this);
     this.renderSend = this.renderSend.bind(this);
@@ -323,8 +332,10 @@ class Example extends React.Component {
     this.renderQuickReply = this.renderQuickReply.bind(this);
     this.onQuickReply = this.onQuickReply.bind(this);
     this.onCategories = this.onCategories.bind(this);
+    this.onPayment = this.onPayment.bind(this);
     this.onCatalog = this.onCatalog.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
+    this.onPressPayButton = this.onPressPayButton.bind(this);
     this.onPressCatalog = this.onPressCatalog.bind(this);
     this.onPressProductDetail = this.onPressProductDetail.bind(this);
     this.onPressWishlist = this.onPressWishlist.bind(this);
@@ -335,7 +346,14 @@ class Example extends React.Component {
       header: null
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    this.setState({product: dummyProduct});
+    await Expo.Font.loadAsync({
+    Roboto: require("native-base/Fonts/Roboto.ttf"),
+    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    });
+    this.setState({ isReady: true });
     this._isMounted = true;
     this.setState(() => {
       return {
@@ -348,8 +366,22 @@ class Example extends React.Component {
     this._isMounted = false;
   }
 
+  componentDidMount() {
+    /* Select the default color and size (first ones) */
+    let defColor = this.state.product.colors[0];
+    let defSize = this.state.product.sizes[0];
+    this.setState({
+      selectedColor: defColor,
+      selectedSize: defSize
+    });
+  }
+
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
+  }
+
+   setModal2Visible(visible) {
+    this.setState({modal2Visible: visible});
   }
 
   onLoadEarlier() {
@@ -457,6 +489,13 @@ class Example extends React.Component {
           this.onQuickReply(true, menus2);
           this.onCatalog(false, catalog1);
           this.onReceive2('Ketik event lain disini');
+          } else if (messages[0].text == 'Bayar sekarang') {
+          this.onReceive('Oke! Mohon klik tombol di bawah ini ya Kak untuk melanjutkan pembayaran');
+          this.onCategories(false, categories1);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(true);
+          this.onReceive2('Ketik teks disini');
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
@@ -528,6 +567,14 @@ class Example extends React.Component {
     });
   }
 
+  onPayment(bool) {
+    this.setState((previousState) => {
+      return {
+        isPayment: bool,
+      };
+    });
+  }
+
   onCatalog(bool, array) {
     this.setState((previousState) => {
       return {
@@ -578,9 +625,13 @@ class Example extends React.Component {
     this.onSend(messages);
   }
 
+  onPressPayButton() {
+    this.setModalVisible(true);
+  }
+
 
   onPressProductDetail() {
-    this.setModalVisible(true);
+    this.setModal2Visible(true);
   }
 
   onTriggerMessage(text2) {
@@ -704,6 +755,16 @@ class Example extends React.Component {
     );
   }
 
+  renderPayButton(props) {
+    return (
+      <PayButton
+        {...props}
+        style={{paddingBottom:9, paddingLeft: 50}}
+        onPress={this.onPressPayButton.bind(this)}
+      />
+    );
+  }
+
   renderCatalog(props) {
     return (
       <ScrollCatalog
@@ -756,10 +817,133 @@ class Example extends React.Component {
     );
   }
 
+  renderImages({item, index}) {
+    return(
+          <TouchableWithoutFeedback
+            key={index}
+          >
+            <Image
+              source={{uri: item}}
+              style={{width: Dimensions.get('window').width, height: 350}}
+              resizeMode="cover"
+            />
+          </TouchableWithoutFeedback>
+      );
+  }
+
+  renderColors() {
+    let colors = [];
+    this.state.product.colors.map((color, i) => {
+      colors.push(
+        <Item key={i} label={color} value={color} />
+      );
+    });
+    return colors;
+  }
+
+  renderSize() {
+    let size = [];
+    this.state.product.sizes.map((s, i) => {
+      size.push(
+        <Item key={i} label={s} value={s} />
+      );
+    });
+    return size;
+  }
+
+  renderSimilairs() {
+    let items = [];
+    let stateItems = this.state.product.similarItems;
+    for(var i=0; i<stateItems.length; i+=2 ) {
+      if(stateItems[i+1]) {
+        items.push(
+          <Grid key={i}>
+            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
+            <ProductComponent key={stateItems[i+1].id} product={stateItems[i+1]} isRight />
+          </Grid>
+        );
+      }
+      else {
+        items.push(
+          <Grid key={i}>
+            <ProductComponent key={stateItems[i].id} product={stateItems[i]} />
+            <Col key={i+1} />
+          </Grid>
+        );
+      }
+    }
+    return items;
+  }
+
+  openGallery(pos) {
+    Actions.imageGallery({images: this.state.product.images, position: pos});
+  }
+
+  addToCart() {
+    var product = this.state.product;
+    product['color'] = this.state.selectedColor;
+    product['size'] = this.state.selectedSize;
+    product['quantity'] = this.state.quantity;
+    AsyncStorage.getItem("CART", (err, res) => {
+      if(!res) AsyncStorage.setItem("CART",JSON.stringify([product]));
+      else {
+        var items = JSON.parse(res);
+        items.push(product);
+        AsyncStorage.setItem("CART",JSON.stringify(items));
+      }
+      Toast.show({
+        text: 'Product added to your cart !',
+        position: 'bottom',
+        type: 'success',
+        buttonText: 'Dismiss',
+        duration: 3000
+      });
+    });
+  }
+
+  addToWishlist() {
+    var product = this.state.product;
+    var success = true;
+    AsyncStorage.getItem("WISHLIST", (err, res) => {
+      if(!res) AsyncStorage.setItem("WISHLIST",JSON.stringify([product]));
+      else {
+        var items = JSON.parse(res);
+        if(this.search(items, product)) {
+          success = false
+        }
+        else {
+          items.push(product);
+          AsyncStorage.setItem("WISHLIST",JSON.stringify(items));
+        }
+      }
+      if(success) {
+        Toast.show({
+          text: 'Product added to your wishlist !',
+          position: 'bottom',
+          type: 'success',
+          buttonText: 'Dismiss',
+          duration: 3000
+        });
+      }
+      else {
+        Toast.show({
+          text: 'This product already exist in your wishlist !',
+          position: 'bottom',
+          type: 'danger',
+          buttonText: 'Dismiss',
+          duration: 3000
+        });
+      }
+    });
+  }
 
 
   render() {
+    if (!this.state.isReady) {
+    return <Expo.AppLoading />;
+    }
 
+    let images = this.state.product.images;
     const detailHarga = this.state.detail ? (
     <View style={s.detail}>
       <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
@@ -860,6 +1044,158 @@ class Example extends React.Component {
                 </View>
           </SafeAreaView>
         </Modal>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modal2Visible}>
+
+          <SafeAreaView style={styles.container}>
+          <NavBar style={navbarPayment}>
+                <NavButton style={navbarPayment.navButton} onPress={() => {
+                  this.setModal2Visible(!this.state.modal2Visible);
+                }}>
+                  <Image style={navbarPayment.image}
+                    resizeMode={"contain"}
+                    source={require('./shared/static/ic_close_white.png')}
+                  />
+                </NavButton>
+                <NavTitle style={navbarPayment.title}>
+                  {"Detail Produk"}
+                </NavTitle>
+                <NavButton />
+            </NavBar>
+      <Container style={{backgroundColor: '#fdfdfd'}}>
+        <Content>
+          <Carousel
+              ref={(carousel) => { this._carousel = carousel; }}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width}
+              onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+              enableSnap={true}
+              data={images}
+              renderItem={this.renderImages}
+            />
+            <Pagination
+              dotsLength={this.state.product.images.length}
+              activeDotIndex={this.state.activeSlide}
+              containerStyle={{ backgroundColor: 'transparent',paddingTop: -10, paddingBottom: 0, marginTop: -30, marginBottom:10}}
+              dotStyle={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  marginHorizontal: 2,
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)'
+              }}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
+            <Grid>
+              <Col size={2}>
+                <Text style={{fontSize: 20}}>{this.state.product.title}</Text>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.state.product.price}</Text>
+              </Col>
+            </Grid>
+            <Grid style={{marginTop: 10}}>
+              <Col>
+                  <TouchableOpacity>
+                    <Text style={{fontSize: 14, color: "#2d7df6"}}>⭐⭐⭐⭐⭐ (5 Ulasan)</Text>
+                  </TouchableOpacity>
+              </Col>
+            </Grid>           
+            <Grid style={{marginTop: 10}}>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Warna:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <Picker
+                  mode="dropdown"
+                  placeholder="Pilih Warna"
+                  note={true}
+                  selectedValue={this.state.selectedColor}
+                  onValueChange={(color) => this.setState({selectedColor: color})}
+                >
+                  {this.renderColors()}
+                </Picker>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Ukuran:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <Picker
+                  mode="dropdown"
+                  placeholder="Pilih Ukuran"
+                  note={true}
+                  selectedValue={this.state.selectedSize}
+                  onValueChange={(size) => this.setState({selectedSize: size})}
+                >
+                  {this.renderSize()}
+                </Picker>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <Text>Jumlah:</Text>
+                </View>
+              </Col>
+              <Col size={3}>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity>1 ? this.state.quantity-1 : 1})} >
+                    <Icon name='ios-remove-outline' />
+                  </Button>
+                  <View style={{flex: 4, justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30}}>
+                    <Text style={{fontSize: 18}}>{this.state.quantity}</Text>
+                  </View>
+                  <Button style={{flex: 1}} icon light onPress={() => this.setState({quantity: this.state.quantity+1})}>
+                    <Icon name='ios-add' />
+                  </Button>
+                </View>
+              </Col>
+            </Grid>
+            <Grid style={{marginTop: 15}}>
+              <Col size={3}>
+                <Button block onPress={this.addToCart.bind(this)}>
+                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>Beli Produk</Text>
+                </Button>
+              </Col>
+              <Col>
+              <Button block onPress={this.addToWishlist.bind(this)} icon transparent style={{backgroundColor: '#fdfdfd'}}>
+                <Icon name='ios-heart' />
+              </Button>
+              </Col>
+            </Grid>
+            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+              <Text style={{marginBottom: 5}}>Deskripsi</Text>
+              <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+              <NBText note>
+                {this.state.product.description}
+              </NBText>
+            </View>
+          </View>
+          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
+            <Text style={{marginBottom: 5}}>Rating dan Ulasan</Text>
+            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+            {this.renderSimilairs()}
+          </View>
+          <View style={{marginTop: 15, paddingLeft: 12, paddingRight: 12}}>
+            <Text style={{marginBottom: 5}}>Informasi Penjual</Text>
+            <SafeAreaView style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+          </View>
+        </Content>
+      </Container>
+          </SafeAreaView>
+        </Modal>
           <GiftedChat
             messages={this.state.messages}
             onSend={this.onSend}
@@ -867,6 +1203,7 @@ class Example extends React.Component {
             placeholder={this.state.placeholder}
             isQuickReply={this.state.isQuickReply}
             isCategories={this.state.isCategories}
+            isPayment={this.state.isPayment}
             isCatalog={this.state.isCatalog}
             slider1ActiveSlide={this.state.slider1ActiveSlide}
             items={this.state.items}
@@ -889,6 +1226,7 @@ class Example extends React.Component {
             renderCustomView={this.renderCustomView}
             renderQuickReply={this.renderQuickReply}
             renderCategories={this.renderCategories}
+            renderPayButton={this.renderPayButton}
             renderCatalog={this.renderCatalog}
             renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
@@ -1217,75 +1555,6 @@ constructor(props) {
   }
 }
 
-class Payment extends React.Component {
-  state = {
-      detail: false};
-
-  _onChange = (formData) => console.log(JSON.stringify(formData, null, " "));
-  _onFocus = (field) => console.log("focusing", field);
-
-     static navigationOptions = {
-        title: 'Pembayaran',
-        headerTitleStyle :{textAlign: 'center',alignSelf:'center', color:'#fff'},
-        headerStyle:{
-            backgroundColor:'#327cce',
-        },
-        headerLeft: (
-          <Button
-            onPress={() => this.props.navigation.navigate('Home')}
-            title="Batal"
-            color="#fff"
-          />
-        ),
-    };
-
-  render() {
-
-    const detailHarga = this.state.detail ? (
-    <View style={s.detail}>
-      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 13}}>Dress: Rp 600.000</Text>
-      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 13}}>Ongkir: Rp 11.000</Text>
-    </View>
-      ) : false;
-
-    return (
-    <SafeAreaView style={s.container}>
-      <View style={s.harga}>
-      <Text style={{marginLeft: 15, marginTop: 11,fontSize: 12}}>Total Tagihan:</Text>
-      <Text style={{marginLeft: 15, marginTop: 2,fontSize: 18, fontWeight: 'bold'}}>Rp 611.000</Text>
-
-      </View>
-      {detailHarga}
-      <View style={s.space}>
-      </View>
-            <CreditCardInput
-
-              style={{marginTop:20}}
-              autoFocus
-
-              requiresName
-              requiresCVC
-
-              labelStyle={s.label}
-              inputStyle={s.input}
-              validColor={"black"}
-              invalidColor={"red"}
-              placeholderColor={"darkgray"}
-
-              onFocus={this._onFocus}
-              onChange={this._onChange} />
-          <TouchableOpacity
-          style={s.loginScreenButton}
-          onPress={() => this.props.navigation.navigate('MyModal')}
-          underlayColor='#fff'>
-          <Text style={s.loginText}>Bayar</Text>
-          </TouchableOpacity>
-          
-    </SafeAreaView>
-    );
-  }
-}
-
 class ModalScreen extends React.Component {
    
 
@@ -1406,12 +1675,6 @@ const MainStack = StackNavigator(
   {
     Home: {
       screen: Example,
-    },
-    Product: {
-      screen: Product,
-    },
-    Payment: {
-      screen: Payment,
     },
   },
   {

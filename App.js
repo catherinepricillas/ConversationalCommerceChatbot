@@ -190,6 +190,123 @@ let menus6 = [
     },
 ];
 
+let menus7 = [
+    {
+       text:'Lihat produk selanjutnya',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Cari produk lain',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus8 = [
+    {
+       text:'Size chart',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'XS',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'S',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'M',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'L',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'XL',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus9 = [
+    {
+       text:'XS',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'S',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'M',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'L',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'XL',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus10 = [
+    {
+       text:'Cari produk lain',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Check out',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
+let menus11 = [
+    {
+       text:'Benar',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Ganti',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+];
+
 
 let categories1 = [
     {
@@ -214,10 +331,71 @@ let categories1 = [
     },
 ];
 
+let categories2 = [
+    {
+       url:require('./shared/static/kado.png'),
+       text: 'Avatar',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/pakaianwanita.png'),
+       text: 'Pakaian wanita',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/pakaianpria.png'),
+       text: 'Pakaian pria',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/beauty.png'),
+       text: 'Kecantikan',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/elektronik.png'),
+       text: 'Elektronik',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/dapur.png'),
+       text: 'Peralatan dapur',
+       borderColor: '#327cce'
+    },
+];
+
+let categories3 = [
+    {
+       url:require('./shared/static/kado.png'),
+       text: 'Avatar',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/blouse.png'),
+       text: 'Blouse wanita',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/gaun.png'),
+       text: 'Gaun wanita',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/rok.png'),
+       text: 'Rok wanita',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/aksesoriswanita.png'),
+       text: 'Aksesoris wanita',
+       borderColor: '#327cce'
+    },
+];
+
 let catalog1 = [
         {
             title: 'Dress Panjang Hijau Wanita',
-            subtitle: 'Rp. 500.000',
+            subtitle: 'Rp. 600.000',
             illustration: require('./shared/static/Dress.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
@@ -227,7 +405,7 @@ let catalog1 = [
             subtitle: 'Rp. 400.000',
             illustration: require('./shared/static/Gold.png'),
             rating: require('./shared/static/five-stars.png'),
-            love: true,
+            love: false,
         },
         {
             title: 'Dress Mini Periwinkle Wanita',
@@ -445,30 +623,35 @@ class Example extends React.Component {
           this.onQuickReply(true, menus1);
           this.onCategories(false, categories1);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Cari inspirasi') {
           this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
           this.onReceive2('Ketik pencarian inspirasi disini');
           this.onQuickReply(false, menus1);
           this.onCategories(true, categories1);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Inspirasi hadiah') {
           this.onReceive('Kamu mau cari hadiah buat siapa nih? Buat pasangan? Ibu? Ayah? Saudara? Atau teman?');
           this.onQuickReply(true, menus3);
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Pesta malam') {
           this.onReceive('Oke Kak! Kakak mau cari inspirasinya untuk pakaian wanita atau pria?');
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
           this.onQuickReply(true, menus4);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Wanita') {
           this.onReceive('Oke... Kakak mau cari apa nih? Aksesoris, pakaian, sepatu, atau seluruh outfit untuk pesta?');
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
           this.onQuickReply(true, menus5);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Favorit Dress Midi Biru Wanita') {
           this.onReceive('Dress Midi Biru Wanita berhasil ditambahkan ke wishlist Kakak.');
           this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Catherine bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
@@ -476,23 +659,27 @@ class Example extends React.Component {
           this.onCategories(false, categories1);
           this.onQuickReply(false, menus5);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Beri rating dan ulasan') {
           this.onReceive('Menurut Kakak berapa rating untuk produk Dress Panjang Hijau Wanita?');
           this.onReceive2('Ketik rating disini');
           this.onCategories(false, categories1);
           this.onQuickReply(true, menus6);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (messages[0].text == 'Pakaian') {
-          this.onReceive('Oke deh! ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
+          this.onReceive('Oke deh! Ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
           this.onReceive2('Ketik teks disini');
           this.onCategories(false, categories1);
-          this.onQuickReply(false, menus1);
+          this.onQuickReply(true, menus7);
+          this.onPayment(false);
           this.onCatalog(true, catalog1);
           } else if (messages[0].text == 'Produk berdasarkan event') {
           this.onReceive('Event apanih yang mau Kakak datengin? Dian bisa bantu cariin buat banyak event loh, mulai dari pesta pernikahan sampai interview kerja.');
           this.onCategories(false, categories1);
           this.onQuickReply(true, menus2);
           this.onCatalog(false, catalog1);
+          this.onPayment(false);
           this.onReceive2('Ketik event lain disini');
           } else if (messages[0].text == 'Bayar sekarang') {
           this.onReceive('Oke! Mohon klik tombol di bawah ini ya Kak untuk melanjutkan pembayaran');
@@ -501,12 +688,109 @@ class Example extends React.Component {
           this.onCatalog(false, catalog1);
           this.onPayment(true);
           this.onReceive2('Ketik teks disini');
+          } else if (messages[0].text == 'Cari produk') {
+          this.onReceive('Kakak bisa langsung ketik produk yang Kakak mau cari di bawah. Pencarian produk bisa mendetail sampe warna dan ukuran produk yang Kakak mau.');
+          this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
+          this.onCategories(true, categories2);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          this.onReceive2('Ketik pencarian produk disini');
+          } else if (messages[0].text == 'Pakaian wanita') {
+          this.onReceive('Ini beberapa kategori produk Pakaian wanita.');
+          this.onCategories(true, categories3);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          this.onReceive2('Ketik pencarian produk disini');
+          } else if (messages[0].text == 'Gaun wanita') {
+          this.onReceive('Ini koleksi gaun wanita kami, ada yang Kakak suka? 😃');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus7);
+          this.onPayment(false);
+          this.onCatalog(true, catalog1);
+          } else if (messages[0].text == 'Lihat produk selanjutnya') {
+          this.onReceive('Oke deh! ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus7);
+          this.onPayment(false);
+          this.onCatalog(true, catalog1);
+          } else if (messages[0].text == 'Beli Dress Panjang Hijau Wanita') {
+          this.onReceive('Oke, Dian bantu pesankan dressnya ya, Kakak mau pesan ukuran apa?');
+          this.onReceive('Kakak butuh size chartnya?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus8);
+          this.onPayment(false);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Size chart') {
+          this.onReceive('Ini size chart untuk produk Dress Panjang Hijau Wanita\nUkuran: (lingkar dada x pinggang x panjang)\nXS: (70x50x150cm)\nS: (72x52x150cm)\nM: (74x54x152cm)\nL: (76x56x152cm)\nXL: (78x58x154cm)');
+          this.onReceive('Kakak mau ukuran yang mana?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus9);
+          this.onPayment(false);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'M') {
+          this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
+          this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories1);
+          this.onQuickReply(true, menus10);
+          this.onPayment(false);
+          this.onCatalog(false, catalog1);
+          } else if (messages[0].text == 'Cari produk lain') {
+          this.onReceive('Mau cari produk apa, kak?');
+          this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
+          this.onReceive2('Ketik pencarian produk disini');
+          this.onCategories(true, categories2);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          } else if (messages[0].text == 'Check out') {
+          this.onReceive('Oke, Dian minta alamat pengirimannya dulu ya, Kak.');
+          this.onReceive('Siapa nama penerima pesanan?');
+          this.onReceive2('Ketik nama penerima disini');
+          this.onCategories(false, categories2);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          } else if (messages[0].text == 'Catherine P') {
+          this.onReceive('Sekarang alamat lengkap penerima ya, Kak. Tolong tulis kecamatan dan kode posnya juga.');
+          this.onReceive2('Ketik alamat penerima disini');
+          this.onCategories(false, categories2);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          } else if (messages[0].text == 'Bandung') {
+          this.onReceive('Terakhir, nomor HP penerima.');
+          this.onReceive2('Ketik nomor penerima disini');
+          this.onCategories(false, categories2);
+          this.onQuickReply(false, menus2);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+          } else if (messages[0].text == '087788995609') {
+          this.onReceive('Trims, Kak. Dian ulang ya datanya.\nNama: Catherine P\nAlamat: Bandung\nNo HP: 087788995609');
+          this.onReceive2('Sudah benar kak alamatnya?');
+          this.onReceive2('Ketik teks disini');
+          this.onCategories(false, categories2);
+          this.onQuickReply(true, menus11);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
+        } else if (messages[0].text == 'Benar') {
+          this.onCategories(false, categories2);
+          this.onQuickReply(true, menus11);
+          this.onCatalog(false, catalog1);
+          this.onPayment(false);
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
               this.onReceive2('Ketik teks disini');
               this.onQuickReply(false, menus1);
               this.onCategories(false, categories1);
+              this.onPayment(false);
               this.onCatalog(false, catalog1);
             
           }
@@ -1101,8 +1385,9 @@ class Example extends React.Component {
                   />
                 </NavButton>
                 <NavTitle style={navbarPayment.title}>
-                  {"Detail Produk"}
+                  {"       Detail Produk"}
                 </NavTitle>
+                <NavButton />
                 <NavButton />
             </NavBar>
       <Container style={{backgroundColor: '#fdfdfd'}}>

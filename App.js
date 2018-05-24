@@ -20,7 +20,7 @@ import {
   Alert
 } from 'react-native';
 import Expo from 'expo';
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton, YellowBox, PersistentMenu, Basket, Wishlist, History} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton, YellowBox, PersistentMenu, Basket, Wishlist, History, Address} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
@@ -31,6 +31,7 @@ import { Container, Content, Button, Left, Right, Icon, Picker, Item, Grid, Col,
 import {default as ProductComponent} from './Product';
 import ImageSlider from 'react-native-image-slider';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import ActionSheet from 'react-native-actionsheet'
 
 console.disableYellowBox = true;
 
@@ -545,6 +546,30 @@ let menus20 = [
     }, 
 ];
 
+let menus21 = [
+    {
+       text:'Simpan',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Tidak',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+];
+
+let menus22 = [
+    {
+       text:'Tambah alamat baru',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+];
+
 
 
 let categories1 = [
@@ -812,6 +837,34 @@ let catalog5 = [
         },
       ];
 
+  let alamat1 = [
+    {
+        namaalamat: 'Rumah',
+        nama: 'Catherine P',
+        alamat: 'Jalan Tengku Angkasa, Bandung 40132',
+        no: '087788995609',
+        next: false,
+        illustration: require('./shared/static/Dress.png'),
+    },
+    {
+        namaalamat: 'Kosan',
+        nama: 'Catherine P',
+        alamat: 'Jalan Dayang Sumbi, Bandung 40132',
+        no: '087788995609',
+        next: false,
+        illustration: require('./shared/static/Dress.png'),
+    },
+    {
+        namaalamat: 'next',
+        nama: 'Catherine P',
+        alamat: 'Jalan Dayang Sumbi, Bandung 40132',
+        no: '087788995609',
+        next: true,
+        illustration: require('./shared/static/tambah.png'),
+    },
+  ];
+
+
 class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -828,6 +881,7 @@ class Example extends React.Component {
       isBasket: false,
       isWishlist: false,
       isHistory: false,
+      isAddress: false,
       slider1ActiveSlide: 0,
       modalVisible: false,
       modal2Visible: false,
@@ -879,6 +933,7 @@ class Example extends React.Component {
     this.renderCatalog = this.renderCatalog.bind(this);
     this.renderBasket = this.renderBasket.bind(this);
     this.renderHistory = this.renderHistory.bind(this);
+    this.renderAddress = this.renderAddress.bind(this);
     this.renderWishlist = this.renderWishlist.bind(this);
     this.onLoadEarlier = this.onLoadEarlier.bind(this);
     this.onPressButtonMenu = this.onPressButtonMenu.bind(this);
@@ -894,6 +949,7 @@ class Example extends React.Component {
     this.onCatalog = this.onCatalog.bind(this);
     this.onBasket = this.onBasket.bind(this);
     this.onHistory = this.onHistory.bind(this);
+    this.onAddress = this.onAddress.bind(this);
     this.onWishlist = this.onWishlist.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
     this.onPressPayButton = this.onPressPayButton.bind(this);
@@ -909,6 +965,8 @@ class Example extends React.Component {
   static navigationOptions = {
       header: null
   }
+
+
 
   async componentWillMount() {
     this.setState({product: dummyProduct});
@@ -940,6 +998,9 @@ class Example extends React.Component {
     });
   }
 
+  showActionSheet = () => {
+    this.ActionSheet.show()
+  }
 
   setModalVisible(visible) {
 
@@ -984,6 +1045,38 @@ class Example extends React.Component {
     this.answerDemo(messages);
   }
 
+  onActionsPress2() {
+    const options = ['Gambar', 'Kirim Lokasi', 'Tutup'];
+    const cancelButtonIndex = options.length - 1;
+    this.context.actionSheet().showActionSheetWithOptions({
+      options,
+      cancelButtonIndex,
+    },
+    (buttonIndex) => {
+      switch (buttonIndex) {
+        case 0:
+          this.setModalVisible(true);
+          break;
+        case 1:
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              this.props.onSend({
+                location: {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                },
+              });
+            },
+            (error) => alert(error.message),
+            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+          );
+          break;
+        default:
+      }
+    });
+  }
+
+
   answerDemo(messages) {
     if (messages.length > 0) {
       if ((messages[0].image || messages[0].location) || !this._isAlright || this._isAlright) {
@@ -1008,6 +1101,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onHistory(false, catalog2);
             this.onWishlist(false, catalog2);
+            this.onAddress(false, alamat1);
           } else if (messages[0].location) {
             this.onReceive('Itu lokasi apa ya, Kak?');
             this.onReceive2('Ketik teks disini');
@@ -1018,8 +1112,9 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false, catalog2);
-          } else if (messages[0].text == 'Obet') {
-            this.onReceive('Hai, Kak Obet! Mau cari produk apa nih?');
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Catherine') {
+            this.onReceive('Hai, Kak Catherine! Mau cari produk apa nih?');
             this.onReceive('Ini beberapa pencarian produk yang bisa Kakak lakukan.');
             this.onReceive2('Ketik pencarian produk disini');
             this.onQuickReply(false, menus1);
@@ -1029,6 +1124,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false, catalog2);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Cari inspirasi') {
             this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
             this.onReceive2('Ketik pencarian inspirasi disini');
@@ -1039,6 +1135,7 @@ class Example extends React.Component {
             this.onHistory(false,catalog3);
             this.onWishlist(false, catalog2);
             this.onCategories(true, categories1);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Inspirasi hadiah') {
             this.onReceive('Kamu mau cari hadiah buat siapa nih? Buat pasangan? Ibu? Ayah? Saudara? Atau teman?');
             this.onQuickReply(true, menus3);
@@ -1049,6 +1146,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Urutkan') {
             this.onReceive('Kakak mau lihat urutan produknya sesuai apa?');
             this.onQuickReply(true, menus19);
@@ -1059,6 +1157,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Filter') {
             this.onReceive('Kakak mau filter produknya sesuai apa?');
             this.onQuickReply(true, menus20);
@@ -1069,8 +1168,9 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Harga') {
-            this.onReceive('Kakak bisa pilih range harga di bawah ini atau Kakak bisa ketik langsung. Untuk produk dress wanita harga berkisar dari 300rb sampai 1jt rupiah, Kak Obet?');
+            this.onReceive('Kakak bisa pilih range harga di bawah ini atau Kakak bisa ketik langsung. Untuk produk dress wanita harga berkisar dari 300rb sampai 1jt rupiah, Kak Catherine?');
             this.onQuickReply(true, menus21);
             this.onReceive2('Ketik range harga disini');
             this.onCategories(false, categories1);
@@ -1079,6 +1179,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Pesta malam') {
             this.onReceive('Oke Kak! Kakak mau cari inspirasinya untuk pakaian wanita atau pria?');
             this.onReceive2('Ketik teks disini');
@@ -1089,6 +1190,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Wanita') {
             this.onReceive('Oke... Kakak mau cari apa nih? Aksesoris, pakaian, sepatu, atau seluruh outfit untuk pesta?');
             this.onReceive2('Ketik teks disini');
@@ -1099,9 +1201,10 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Tambahkan Dress Panjang Hijau Wanita ke wishlist') {
             this.onReceive('Dress Midi Biru Wanita berhasil ditambahkan ke wishlist Kakak.');
-            this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Obet bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
+            this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Catherine bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories1);
             this.onQuickReply(false, menus5);
@@ -1110,6 +1213,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onHistory(false,catalog3);
             this.onWishlist(false, catalog2);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Beri rating dan ulasan') {
             this.onReceive('Menurut Kakak berapa rating untuk produk Dress Panjang Hijau Wanita?');
             this.onReceive2('Ketik rating disini');
@@ -1120,6 +1224,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Pakaian') {
             this.onReceive('Oke deh! Ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
             this.onReceive2('Ketik teks disini');
@@ -1130,6 +1235,7 @@ class Example extends React.Component {
             this.onWishlist(false, catalog1);
             this.onHistory(false,catalog1);
             this.onCatalog(true, catalog1);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Produk berdasarkan event') {
             this.onReceive('Event apanih yang mau Kakak datengin? Dian bisa bantu cariin buat banyak event loh, mulai dari pesta pernikahan sampai interview kerja.');
             this.onCategories(false, categories1);
@@ -1140,6 +1246,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Kartu kredit') {
             this.onReceive('Oke! Mohon klik tombol di bawah ini ya Kak untuk melanjutkan pembayaran');
             this.onCategories(false, categories1);
@@ -1150,6 +1257,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Kategori produk') {
             this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
             this.onCategories(true, categories2);
@@ -1160,6 +1268,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Cari berdasarkan kata kunci') {
             this.onReceive('Kakak bisa langsung ketik produk yang Kakak mau cari di bawah. Pencarian produk bisa mendetail sampe warna dan ukuran produk yang Kakak mau.');
             this.onCategories(false, categories2);
@@ -1170,6 +1279,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Pakaian wanita') {
             this.onReceive('Ini beberapa kategori produk Pakaian wanita.');
             this.onCategories(true, categories3);
@@ -1180,6 +1290,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Wishlist') {
             this.onReceive('Ini produk di wishlist Kakak. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh');
             this.onCategories(false, categories3);
@@ -1190,6 +1301,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onHistory(false,catalog2);
             this.onWishlist(true, catalog2);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Dress wanita') {
             this.onReceive('Ini koleksi dress wanita kami, ada yang Kakak suka? 😃');
             this.onReceive2('Ketik teks disini');
@@ -1200,6 +1312,7 @@ class Example extends React.Component {
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
             this.onCatalog(true, catalog1);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Lihat produk selanjutnya') {
             this.onReceive('Ini produk selanjutnya');
             this.onReceive2('Ketik teks disini');
@@ -1210,6 +1323,7 @@ class Example extends React.Component {
             this.onHistory(false,catalog3);
             this.onWishlist(false, catalog2);
             this.onCatalog(true, catalog1);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Beli Dress Panjang Hijau Wanita') {
             this.onReceive('Oke, Dian bantu pesankan dressnya ya, Kakak mau pesan ukuran apa?');
             this.onReceive('Kakak butuh size chartnya?');
@@ -1221,6 +1335,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Size chart') {
             this.onReceive('Ini size chart untuk produk Dress Panjang Hijau Wanita\nUkuran: (lingkar dada x pinggang x panjang)\nXS: (70x50x150cm)\nS: (72x52x150cm)\nM: (74x54x152cm)\nL: (76x56x152cm)\nXL: (78x58x154cm)');
             this.onReceive('Kakak mau ukuran yang mana?');
@@ -1232,6 +1347,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'M') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -1243,6 +1359,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'S') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -1254,6 +1371,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'L') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -1265,6 +1383,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'XL') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -1276,6 +1395,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'XS') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -1287,6 +1407,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Cari produk lain') {
             this.onReceive('Mau cari produk apa, kak?');
             this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
@@ -1298,6 +1419,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Check out') {
             this.onReceive('Oke, Dian minta alamat pengirimannya dulu ya, Kak.');
             this.onReceive('Siapa nama penerima pesanan?');
@@ -1309,7 +1431,8 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
-          } else if (messages[0].text == 'Obetz') {
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Catherine P') {
             this.onReceive('Sekarang alamat lengkap penerima ya, Kak. Tolong tulis kecamatan dan kode posnya juga.');
             this.onReceive2('Ketik alamat penerima disini');
             this.onCategories(false, categories2);
@@ -1319,7 +1442,8 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
-          } else if (messages[0].text == 'Jakarta') {
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Jalan Tengku Angkasa, Bandung 40132') {
             this.onReceive('Terakhir, nomor HP penerima.');
             this.onReceive2('Ketik nomor penerima disini');
             this.onCategories(false, categories2);
@@ -1329,8 +1453,19 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
-          } else if (messages[0].text == '0') {
-            this.onReceive('Trims, Kak. Dian ulang ya datanya.\nNama: Obetz\nAlamat: Jakarta\nNo HP: 0');
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Check out sekarang') {
+            this.onReceive('Mau dikirim ke alamat yang mana Kak?');
+            this.onCategories(false, categories2);
+            this.onQuickReply(false, menus2);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onAddress(true, alamat1);
+          } else if (messages[0].text == '087788995609') {
+            this.onReceive('Trims, Kak. Dian ulang ya datanya.\nNama: Catherine P\nAlamat: Jalan Tengku Angkasa, Bandung 40132\nNo HP: 087788995609');
             this.onReceive('Sudah benar kak alamatnya? Mohon konfirmasinya.');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories2);
@@ -1340,7 +1475,30 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Benar') {
+            this.onReceive('Kakak mau Dian simpan data alamat Kakak ga? Kalau Dian simpan next Kakak belanja Kakak ga perlu isi datanya lagi.');
+            this.onReceive2('Ketik teks disini');
+            this.onQuickReply(true, menus21);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onCategories(false, categories4);
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Simpan') {
+            this.onReceive('Mohon ketik nama alamatnya, Kak. Contohnya: Rumah, Kosan, Kantor');
+            this.onReceive2('Ketik nama alamat disini');
+            this.onQuickReply(false, menus21);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onCategories(false, categories4);
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Tidak') {
             this.onReceive('Berikut total pesanan Kakak ya\nDress Panjang Hijau Wanita: Rp 600.000\nOngkir: Rp 11.000\nTotal Tagihan: Rp 611.000');
             this.onReceive('Mau bayar dengan metode apa Kak?');
             this.onReceive('Pembayaran disini terjamin aman dengan menggunakan payment gateway, disini Dian ga nyimpen informasi kartu kredit aman.');
@@ -1351,6 +1509,20 @@ class Example extends React.Component {
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
             this.onCategories(true, categories4);
+            this.onAddress(false, alamat1);
+          } else if (messages[0].text == 'Rumah') {
+            this.onReceive('Alamat kakak sudah tersimpan ya');
+            this.onReceive('Berikut total pesanan Kakak ya\nDress Panjang Hijau Wanita: Rp 600.000\nOngkir: Rp 11.000\nTotal Tagihan: Rp 611.000');
+            this.onReceive('Mau bayar dengan metode apa Kak?');
+            this.onReceive('Pembayaran disini terjamin aman dengan menggunakan payment gateway, disini Dian ga nyimpen informasi kartu kredit aman.');
+            this.onQuickReply(false, menus11);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onCategories(true, categories4);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Pembayaran berhasil') {
             this.onReceive('Terima kasih! Pembayaran Kakak dengan kartu ');
             this.onReceive('Mau bayar dengan metode apa Kak?');
@@ -1362,6 +1534,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Lacak pesanan') {
             this.onReceive('Status Pesanan #1919292\n\nJumat, 5 Mei 2018: Pesanan bersama dengan kurir\nKamis, 4 Mei 2018: Pesanan tiba di BDO_Gateway\nRabu, 3 Mei 2018: Pesanan dikirimkan');
             this.onCategories(false, categories1);
@@ -1371,6 +1544,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Pesanan sampai') {
             this.onReceive('Terima kasih Kak! Semoga kakak suka sama pesanannya.');
             this.onReceive('Apakah Kakak puas dengan pesanannya? Mohon tulis ulasan sama rating produk ya. Jika Kakak tidak puas Kakak juga bisa mengajukan komplain.');
@@ -1381,6 +1555,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Tulis ulasan dan rating') {
             this.onReceive('Berapa rating yang Kakak berikan untuk produk Dress Panjang Biru Wanita?');
             this.onCategories(false, categories1);
@@ -1390,6 +1565,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == '⭐⭐⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1400,6 +1576,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == '⭐⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1410,6 +1587,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == '⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1420,6 +1598,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == '⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Apakah ada masalah dengan produknya Kak? Kakak bisa mengajukan pengembalian pesanan kalo mau.');
             this.onReceive2('Ketik ulasan disini');
@@ -1430,6 +1609,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == '⭐') {
             this.onReceive('Terima kasih atas ratingnya. Apakah ada masalah dengan produknya Kak? Kakak bisa mengajukan pengembalian pesanan kalo mau.');
             this.onReceive2('Ketik ulasan disini');
@@ -1440,6 +1620,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Produk bagus') {
             this.onReceive('Terima kasih atas ulasannya Kak.');
             this.onReceive('Apakah Kakak puas dengan pelayanan dari Dian? Mohon maaf kalo Dian ada salah kata, tolong berikan kritik dan saran untuk pengembangan Dian ke depannya ya.');
@@ -1451,6 +1632,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Kurang puas') {
             this.onReceive('Mohon maaf kalo Dian masih kurang maksimal. Mohon berikan kritik dan saran untuk Dian.');
             this.onReceive2('Ketik ulasan disini');
@@ -1461,6 +1643,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Mulai Pencarian Baru') {
             this.onReceive('Kakak mau cari apa?');
             this.onReceive2('Ketik pencarian disini');
@@ -1471,6 +1654,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Belanja lagi') {
             this.onReceive('Kakak mau belanja apa lagi nih? Dian bantu carikan ya');
             this.onReceive2('Ketik pencarian disini');
@@ -1481,6 +1665,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Komplain') {
             this.onReceive('Ada masalah apa ya kak?');
             this.onReceive2('Ketik komplain disini');
@@ -1491,6 +1676,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Keranjang Belanja') {
             this.onReceive('Ini produk-produk dalam keranjang belanja Kakak. Check out sekarang untuk memesan.');
             this.onReceive2('Ketik tesk disini');
@@ -1501,6 +1687,7 @@ class Example extends React.Component {
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
             this.onBasket(true, catalog4);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Transfer bank') {
             this.onReceive('Untuk metode transfer bank, mohon kirim ke beberapa rekening kami di bawah ini ya');
             this.onReceive2('Total: Rp 611.000\nRekening a.n PT Commerce Indonesia\nBank Mandiri: 292 383 2234\nBank BCA: 383 736 373');
@@ -1512,6 +1699,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Hapus Dress Panjang Hijau Wanita dari keranjang belanja') {
             this.onReceive('Produk udah dihapus dari keranjang belanja kakak');
             this.onReceive2('Total: Rp 611.000\nRekening a.n PT Commerce Indonesia\nBank Mandiri: 292 383 2234\nBank BCA: 383 736 373');
@@ -1523,6 +1711,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
           } else if (messages[0].text == 'Histori Transaksi') {
             this.onReceive('Ini list histori transaksi Kakak');
             this.onQuickReply(false, menus17);
@@ -1532,6 +1721,7 @@ class Example extends React.Component {
             this.onBasket(false, catalog2);
             this.onWishlist(false, catalog2);
             this.onHistory(true,catalog3);
+            this.onAddress(false, alamat1);
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
@@ -1543,6 +1733,7 @@ class Example extends React.Component {
               this.onBasket(false, catalog2);
               this.onWishlist(false, catalog2);
               this.onHistory(false,catalog3);
+              this.onAddress(false, alamat1);
           }
         }
       }
@@ -1654,6 +1845,15 @@ class Example extends React.Component {
       return {
         isHistory: bool,
         entries: array,
+      };
+    });
+  }
+
+  onAddress(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isAddress: bool,
+        alamat: array,
       };
     });
   }
@@ -1916,6 +2116,18 @@ class Example extends React.Component {
     );
   }
 
+  renderAddress(props) {
+    return (
+      <Address
+        {...props}
+        style={{paddingBottom:86, paddingLeft: 20}}
+        onPress={this.onPressCatalog.bind(this)}
+        onPress2={this.onPressProductDetail.bind(this)}
+        onPress3={this.onPressWishlist.bind(this)}
+      />
+    );
+  }
+
   renderWishlist(props) {
     return (
       <Wishlist
@@ -2032,7 +2244,7 @@ class Example extends React.Component {
                     fontSize:15.5,
                     fontWeight:this.props.fontWeight}
                   }>
-                  <Image style={{height: 18, width: 20}}
+                  <Image style={{height: 18, width: 18}}
                         source={require('/Users/catherinepricillas/Chatbot/shared/static/cart.png')}
                       />
                       {'   '}Keranjang Belanja</Text>
@@ -2060,7 +2272,7 @@ class Example extends React.Component {
                     fontWeight:this.props.fontWeight}
                   }>
                   <Image style={{height: 18, width: 20}}
-                        source={require('/Users/catherinepricillas/Chatbot/shared/static/heartlined.png')}
+                        source={require('Chatbot/shared/static/heartlined.png')}
                       />
                       {'   '}Wishlist</Text>
               </View>
@@ -2238,11 +2450,18 @@ class Example extends React.Component {
             source={require('./shared/static/ic_search_white.png')}
           />
           </NavButton>
-          <NavButton style={navbarPayment.navButton}>
+          <NavButton style={navbarPayment.navButton} onPress={this.showActionSheet}>
             <Image style={navbarPayment.image}
               resizeMode={"contain"}
               source={require('./shared/static/ic_settings_white.png')}
             />
+            <ActionSheet
+          ref={o => this.ActionSheet = o}
+          options={['Matikan Notifikasi', 'Hapus Histori Chat', 'Hapus Pesan','Laporkan Masalah', 'Kirim Kritik dan Saran', 'Tutup']}
+          cancelButtonIndex={5}
+          onPress={() => { /* do something */ }}
+
+        />
           </NavButton>
           </NavBar>
           <Modal
@@ -2260,9 +2479,14 @@ class Example extends React.Component {
                     source={require('./shared/static/ic_close_white.png')}
                   />
                 </NavButton>
+                <NavButton />
+                 <NavButton />
                 <NavTitle style={navbarPayment.title}>
                   {"Pembayaran"}
                 </NavTitle>
+                <NavButton />
+                <NavButton />
+                <NavButton />
                 <NavButton />
             </NavBar>
             <View style={s.container}>
@@ -2361,23 +2585,31 @@ class Example extends React.Component {
             <Grid style={{marginTop: 10}}>
               <Col>
                   <TouchableOpacity>
-                    <Text style={{fontSize: 14, color: "#2d7df6"}}>⭐⭐⭐⭐⭐ (5 Ulasan)</Text>
+                  <Text style={{fontSize: 14, color: "#2d7df6"}}>
+                    <Image style={{height: 22, width: 60, marginLeft: 33, marginTop: -7}}
+                        source={require('Chatbot/shared/static/fivestar.png')}/>
+                    {' '}(5 Ulasan)</Text>
                   </TouchableOpacity>
               </Col>
             </Grid>           
             <Grid style={{marginTop: 15}}>
               <Col size={3}>
-                <Button block onPress={this.addToCart.bind(this)}>
-                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>Beli Produk</Text>
-                </Button>
+                <TouchableOpacity
+                style={s.screenButton}
+                onPress={this.addToCart.bind(this)}>
+                <Text style={s.loginText}>Beli</Text>
+                </TouchableOpacity>
               </Col>
               <Col>
-              <Button block onPress={this.addToWishlist.bind(this)} icon transparent style={{color: '#e0a551', backgroundColor: '#fdfdfd'}}>
-                <Icon name='ios-heart' />
-              </Button>
+                <TouchableOpacity
+                onPress={this.addToWishlist.bind(this)}
+                >
+                <Image style={{height: 30, width: 34, marginLeft: 35, marginTop:5}}
+                        source={require('Chatbot/shared/static/heartout2.png')}/>
+                </TouchableOpacity>
               </Col>
             </Grid>
-            <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+            <View style={{marginTop: 22, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Deskripsi</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
               <NBText note>
@@ -2399,6 +2631,14 @@ class Example extends React.Component {
                 {this.state.product.description2}
               </NBText>
             </View>
+            <TouchableOpacity
+                style={s.loginScreenButton}
+                onPress={() => {
+                  this.onTriggerMessage('Pembayaran berhasil')
+                }}
+                underlayColor='#fff'>
+                <Text style={s.loginText}>Bayar</Text>
+                </TouchableOpacity>
           </View>
         </Content>
       </Container>
@@ -2414,6 +2654,7 @@ class Example extends React.Component {
             isMenu={this.state.isMenu}
             isCategories={this.state.isCategories}
             isPayment={this.state.isPayment}
+            isAddress={this.state.isAddress}
             isCatalog={this.state.isCatalog}
             isBasket={this.state.isBasket}
             isHistory={this.state.isHistory}
@@ -2422,6 +2663,7 @@ class Example extends React.Component {
             items={this.state.items}
             items2={this.state.items2}
             entries={this.state.entries}
+            alamat={this.state.alamat}
             onReceive2={this.onReceive2}
             onReceive3={this.onReceive2}
             onQuickReply={this.onQuickReply}
@@ -2445,6 +2687,7 @@ class Example extends React.Component {
             renderPayButton={this.renderPayButton}
             renderCatalog={this.renderCatalog}
             renderBasket={this.renderBasket}
+            renderAddress={this.renderAddress}
             renderHistory={this.renderHistory}
             renderWishlist={this.renderWishlist}
             renderComposer={this.renderComposer}
@@ -2525,13 +2768,27 @@ const s = StyleSheet.create({
   loginScreenButton:{
     marginRight:0,
     width:375,
-    height: 50,
+    height: 45,
     marginLeft:0,
-    marginTop:639,
+    marginTop:388,
     paddingTop:10,
     paddingBottom:10,
     backgroundColor:'#eba43b',
     borderWidth: 1,
+    borderColor: '#eba43b',
+    position: 'absolute',
+  },
+  screenButton:{
+    marginRight:0,
+    width:270,
+    height: 45,
+    marginLeft:0,
+    marginTop:0,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#eba43b',
+    borderWidth: 1,
+    borderRadius: 5,
     borderColor: '#eba43b',
     position: 'absolute',
   },

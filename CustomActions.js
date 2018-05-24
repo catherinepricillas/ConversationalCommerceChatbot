@@ -8,7 +8,6 @@ import {
   ViewPropTypes,
   Text,
   SafeAreaView,
-  Alert,
 } from 'react-native';
 
 import CameraRollPicker from 'react-native-camera-roll-picker';

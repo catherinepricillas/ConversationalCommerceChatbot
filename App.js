@@ -16,10 +16,11 @@ import {
   TouchableWithoutFeedback,
   AsyncStorage,
   TouchableHighlight,
-  Animated
+  Animated,
+  Alert
 } from 'react-native';
 import Expo from 'expo';
-import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton, YellowBox, PersistentMenu, Basket} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble, SystemMessage, Send, InputToolbar, Menu, Composer, ScrollingButtonMenu, ScrollCategories, ScrollCatalog, PayButton, YellowBox, PersistentMenu, Basket, Wishlist, History} from 'react-native-gifted-chat';
 import CustomActions from './CustomActions';
 import CustomView from './CustomView';
 import NavBar, { NavTitle, NavButton, NavButtonText } from 'react-native-nav';
@@ -35,13 +36,37 @@ console.disableYellowBox = true;
 
 let menus1 = [
     {
-       text:'Cari produk',
+       text:'Kategori produk',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Cari berdasarkan kata kunci',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
     },
     {
        text:'Cari inspirasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Produk berdasarkan event',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Produk terlaris',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Produk terbaru',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
@@ -192,13 +217,25 @@ let menus6 = [
 
 let menus7 = [
     {
-       text:'Lihat produk selanjutnya',
+       text:'Cari produk lain',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
     },
     {
-       text:'Cari produk lain',
+       text:'Rekomendasi',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Urutkan',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Filter',
        textColor:'#eba43b',
        backgroundColor:'#FFFFFF',
        borderColor:'#eba43b',
@@ -442,6 +479,74 @@ let menus18 = [
     }, 
 ];
 
+let menus19 = [
+    {
+       text:'Harga',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Popularitas',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Rating',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Pembelian',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+];
+
+let menus20 = [
+    {
+       text:'Harga',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Brand',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    },
+    {
+       text:'Warna',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Model',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Ukuran',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Rating',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+];
+
+
+
 let categories1 = [
     {
        url:require('./shared/static/kado.png'),
@@ -466,6 +571,54 @@ let categories1 = [
 ];
 
 
+
+let categories5 = [
+    {
+       url:require('./shared/static/kado.png'),
+       text: 'Avatar',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/kategori.png'),
+       text: 'Kategori produk',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/keyword.png'),
+       text: 'Cari berdasarkan kata kunci',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/kado.png'),
+       text: 'Inspirasi kado',
+       borderColor: '#327cce',
+    },
+    {
+       url:require('./shared/static/event.png'),
+       text: 'Produk berdasarkan event',
+       borderColor: '#327cce'
+    },
+  {
+       url: require('./shared/static/bestselling.png'),
+       text: 'Produk terlaris',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/new.png'),
+       text: 'Produk terbaru',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/rekomendasi.png'),
+       text: 'Rekomendasi',
+       borderColor: '#327cce'
+    },
+    {
+       url: require('./shared/static/promosi.png'),
+       text: 'Promosi',
+       borderColor: '#327cce'
+    },
+];
 
 let categories2 = [
     {
@@ -513,7 +666,7 @@ let categories3 = [
     },
     {
        url:require('./shared/static/gaun.png'),
-       text: 'Gaun wanita',
+       text: 'Dress wanita',
        borderColor: '#327cce',
     },
     {
@@ -558,6 +711,7 @@ let catalog1 = [
             illustration: require('./shared/static/Dress.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next: false,
         },
         {
             title: 'Dress Midi Krem Wanita',
@@ -565,6 +719,7 @@ let catalog1 = [
             illustration: require('./shared/static/Gold.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next:false,
         },
         {
             title: 'Dress Mini Periwinkle Wanita',
@@ -572,6 +727,7 @@ let catalog1 = [
             illustration: require('./shared/static/Periwinkle.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next:false,
         },
         {
             title: 'Dress Silver Pesta Wanita',
@@ -579,6 +735,7 @@ let catalog1 = [
             illustration: require('./shared/static/Silver.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next:false,
         },
         {
             title: 'Dress Midi Lace Wanita',
@@ -586,6 +743,7 @@ let catalog1 = [
             illustration: require('./shared/static/Lace.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next: false,
         },
         {
             title: 'Dress Midi Biru Wanita',
@@ -593,6 +751,7 @@ let catalog1 = [
             illustration: require('./shared/static/BIrumidi.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next: false,
         },
         {
             title: 'Dress Mini Berry Wanita',
@@ -600,6 +759,15 @@ let catalog1 = [
             illustration: require('./shared/static/Berry.png'),
             rating: require('./shared/static/five-stars.png'),
             love: false,
+            next: false,
+        },
+        {
+            title: 'Lihat produk selanjutnya',
+            subtitle: 'Rp. 250.000',
+            illustration: require('./shared/static/next.png'),
+            rating: require('./shared/static/five-stars.png'),
+            love: false,
+            next: true,
         },
       ];
 
@@ -609,10 +777,40 @@ let catalog2 = [
             subtitle: 'Rp. 600.000',
             illustration: require('./shared/static/Dress.png'),
             rating: require('./shared/static/five-stars.png'),
-            love: false,
+            love: true,
         },
       ];
 
+let catalog4 = [
+      {
+          title: 'Dress Panjang Hijau Wanita',
+          subtitle: 'Rp. 600.000',
+          illustration: require('./shared/static/Dress.png'),
+          rating: require('./shared/static/five-stars.png'),
+          love: false,
+      },
+      ];
+
+let catalog3 = [
+        {
+            title: 'Dress Panjang Hijau Wanita',
+            subtitle: '#1919292',
+            illustration: require('./shared/static/Dress.png'),
+        },
+      ];
+
+let catalog5 = [
+        {
+            title: 'Dress Panjang Hijau Wanita',
+            subtitle: '#1919292',
+            illustration: require('./shared/static/Dress.png'),
+        },
+        {
+            title: 'Dress Midi Berry Wanita',
+            subtitle: '#1919292',
+            illustration: require('./shared/static/Dress.png'),
+        },
+      ];
 
 class Example extends React.Component {
   constructor(props) {
@@ -628,6 +826,8 @@ class Example extends React.Component {
       isPayment: false,
       isCatalog: false,
       isBasket: false,
+      isWishlist: false,
+      isHistory: false,
       slider1ActiveSlide: 0,
       modalVisible: false,
       modal2Visible: false,
@@ -678,6 +878,8 @@ class Example extends React.Component {
     this.renderFooter = this.renderFooter.bind(this);
     this.renderCatalog = this.renderCatalog.bind(this);
     this.renderBasket = this.renderBasket.bind(this);
+    this.renderHistory = this.renderHistory.bind(this);
+    this.renderWishlist = this.renderWishlist.bind(this);
     this.onLoadEarlier = this.onLoadEarlier.bind(this);
     this.onPressButtonMenu = this.onPressButtonMenu.bind(this);
     this.onPressPersistentMenu = this.onPressPersistentMenu.bind(this);
@@ -691,6 +893,8 @@ class Example extends React.Component {
     this.onPayment = this.onPayment.bind(this);
     this.onCatalog = this.onCatalog.bind(this);
     this.onBasket = this.onBasket.bind(this);
+    this.onHistory = this.onHistory.bind(this);
+    this.onWishlist = this.onWishlist.bind(this);
     this.onPressCategories = this.onPressCategories.bind(this);
     this.onPressPayButton = this.onPressPayButton.bind(this);
     this.onPressCatalog = this.onPressCatalog.bind(this);
@@ -736,11 +940,14 @@ class Example extends React.Component {
     });
   }
 
+
   setModalVisible(visible) {
+
     this.setState({modalVisible: visible});
   }
 
    setModal2Visible(visible) {
+
     this.setState({modal2Visible: visible});
   }
 
@@ -765,7 +972,7 @@ class Example extends React.Component {
   }
 
   onSend(messages = []) {
-        this.onQuickReply(false, []),
+    this.onQuickReply(false, []),
     this.onMenu(false, menus1);
     this.setState((previousState) => {
       return {
@@ -799,6 +1006,8 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onHistory(false, catalog2);
+            this.onWishlist(false, catalog2);
           } else if (messages[0].location) {
             this.onReceive('Itu lokasi apa ya, Kak?');
             this.onReceive2('Ketik teks disini');
@@ -807,23 +1016,29 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Catherine') {
-            this.onReceive('Hai, Kak Catherine! Mau cari produk apa nih?');
-            this.onReceive('Kalau Kakak masih bingung, Dian bisa bantuin buat cariin inspirasi. Contohnya kayak inspirasi buat beli kado, rekomendasi produk kekinian, atau bahkan pakaian buat pesta.');
+            this.onWishlist(false, catalog2);
+            this.onHistory(false, catalog2);
+          } else if (messages[0].text == 'Obet') {
+            this.onReceive('Hai, Kak Obet! Mau cari produk apa nih?');
+            this.onReceive('Ini beberapa pencarian produk yang bisa Kakak lakukan.');
             this.onReceive2('Ketik pencarian produk disini');
-            this.onQuickReply(true, menus1);
-            this.onCategories(false, categories1);
+            this.onQuickReply(false, menus1);
+            this.onCategories(true, categories5);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false, catalog2);
           } else if (messages[0].text == 'Cari inspirasi') {
             this.onReceive('Kakak lagi cari inspirasi untuk apa nih?');
             this.onReceive2('Ketik pencarian inspirasi disini');
             this.onQuickReply(false, menus1);
-            this.onCategories(true, categories1);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onWishlist(false, catalog2);
+            this.onCategories(true, categories1);
           } else if (messages[0].text == 'Inspirasi hadiah') {
             this.onReceive('Kamu mau cari hadiah buat siapa nih? Buat pasangan? Ibu? Ayah? Saudara? Atau teman?');
             this.onQuickReply(true, menus3);
@@ -832,6 +1047,38 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Urutkan') {
+            this.onReceive('Kakak mau lihat urutan produknya sesuai apa?');
+            this.onQuickReply(true, menus19);
+            this.onReceive2('Ketik urutan disini');
+            this.onCategories(false, categories1);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Filter') {
+            this.onReceive('Kakak mau filter produknya sesuai apa?');
+            this.onQuickReply(true, menus20);
+            this.onReceive2('Ketik filter disini');
+            this.onCategories(false, categories1);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Harga') {
+            this.onReceive('Kakak bisa pilih range harga di bawah ini atau Kakak bisa ketik langsung. Untuk produk dress wanita harga berkisar dari 300rb sampai 1jt rupiah, Kak Obet?');
+            this.onQuickReply(true, menus21);
+            this.onReceive2('Ketik range harga disini');
+            this.onCategories(false, categories1);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Pesta malam') {
             this.onReceive('Oke Kak! Kakak mau cari inspirasinya untuk pakaian wanita atau pria?');
             this.onReceive2('Ketik teks disini');
@@ -840,6 +1087,8 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Wanita') {
             this.onReceive('Oke... Kakak mau cari apa nih? Aksesoris, pakaian, sepatu, atau seluruh outfit untuk pesta?');
             this.onReceive2('Ketik teks disini');
@@ -848,15 +1097,19 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Tambahkan Dress Panjang Hijau Wanita ke wishlist') {
             this.onReceive('Dress Midi Biru Wanita berhasil ditambahkan ke wishlist Kakak.');
-            this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Catherine bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
+            this.onReceive('Untuk produk-produk di wishlist Kakak, Kak Obet bisa klik menu di sebelah kiri bawah layar. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh, produknya laku nih soalnya!');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories1);
             this.onQuickReply(false, menus5);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onWishlist(false, catalog2);
           } else if (messages[0].text == 'Beri rating dan ulasan') {
             this.onReceive('Menurut Kakak berapa rating untuk produk Dress Panjang Hijau Wanita?');
             this.onReceive2('Ketik rating disini');
@@ -865,14 +1118,18 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Pakaian') {
             this.onReceive('Oke deh! Ini inspirasi pakaian dan aksesoris buat Kakak yang pengen tampil oke di pesta malam apapun! Ada lagi yang bisa Dian cariin?');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories1);
             this.onQuickReply(true, menus7);
             this.onPayment(false);
+            this.onBasket(false, catalog1);
+            this.onWishlist(false, catalog1);
+            this.onHistory(false,catalog1);
             this.onCatalog(true, catalog1);
-            this.onBasket(false, catalog2);
           } else if (messages[0].text == 'Produk berdasarkan event') {
             this.onReceive('Event apanih yang mau Kakak datengin? Dian bisa bantu cariin buat banyak event loh, mulai dari pesta pernikahan sampai interview kerja.');
             this.onCategories(false, categories1);
@@ -881,6 +1138,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onReceive2('Ketik event lain disini');
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Kartu kredit') {
             this.onReceive('Oke! Mohon klik tombol di bawah ini ya Kak untuk melanjutkan pembayaran');
             this.onCategories(false, categories1);
@@ -889,8 +1148,9 @@ class Example extends React.Component {
             this.onPayment(true);
             this.onReceive2('Ketik teks disini');
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Cari produk') {
-            this.onReceive('Kakak bisa langsung ketik produk yang Kakak mau cari di bawah. Pencarian produk bisa mendetail sampe warna dan ukuran produk yang Kakak mau.');
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Kategori produk') {
             this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
             this.onCategories(true, categories2);
             this.onQuickReply(false, menus2);
@@ -898,6 +1158,18 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onReceive2('Ketik pencarian produk disini');
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Cari berdasarkan kata kunci') {
+            this.onReceive('Kakak bisa langsung ketik produk yang Kakak mau cari di bawah. Pencarian produk bisa mendetail sampe warna dan ukuran produk yang Kakak mau.');
+            this.onCategories(false, categories2);
+            this.onQuickReply(false, menus2);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onReceive2('Ketik pencarian produk disini');
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Pakaian wanita') {
             this.onReceive('Ini beberapa kategori produk Pakaian wanita.');
             this.onCategories(true, categories3);
@@ -906,30 +1178,38 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onReceive2('Ketik pencarian produk disini');
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Wishlist') {
             this.onReceive('Ini produk di wishlist Kakak. Jangan cuma ditaruh di wishlist aja kak, nanti kehabisan loh');
             this.onCategories(false, categories3);
             this.onQuickReply(false, menus2);
-            this.onCatalog(true, catalog2);
+            this.onCatalog(false, catalog2);
             this.onPayment(false);
             this.onReceive2('Ketik pencarian produk disini');
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Gaun wanita') {
-            this.onReceive('Ini koleksi gaun wanita kami, ada yang Kakak suka? 😃');
+            this.onHistory(false,catalog2);
+            this.onWishlist(true, catalog2);
+          } else if (messages[0].text == 'Dress wanita') {
+            this.onReceive('Ini koleksi dress wanita kami, ada yang Kakak suka? 😃');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories1);
             this.onQuickReply(true, menus7);
             this.onPayment(false);
-            this.onCatalog(true, catalog1);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onCatalog(true, catalog1);
           } else if (messages[0].text == 'Lihat produk selanjutnya') {
-            this.onReceive('Ini produk lainnya');
+            this.onReceive('Ini produk selanjutnya');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories1);
             this.onQuickReply(true, menus7);
             this.onPayment(false);
-            this.onCatalog(true, catalog1);
             this.onBasket(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onWishlist(false, catalog2);
+            this.onCatalog(true, catalog1);
           } else if (messages[0].text == 'Beli Dress Panjang Hijau Wanita') {
             this.onReceive('Oke, Dian bantu pesankan dressnya ya, Kakak mau pesan ukuran apa?');
             this.onReceive('Kakak butuh size chartnya?');
@@ -939,6 +1219,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onCatalog(false, catalog1);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Size chart') {
             this.onReceive('Ini size chart untuk produk Dress Panjang Hijau Wanita\nUkuran: (lingkar dada x pinggang x panjang)\nXS: (70x50x150cm)\nS: (72x52x150cm)\nM: (74x54x152cm)\nL: (76x56x152cm)\nXL: (78x58x154cm)');
             this.onReceive('Kakak mau ukuran yang mana?');
@@ -948,6 +1230,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onCatalog(false, catalog1);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'M') {
             this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
             this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
@@ -957,6 +1241,52 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onCatalog(false, catalog1);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'S') {
+            this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive2('Ketik teks disini');
+            this.onCategories(false, categories1);
+            this.onQuickReply(true, menus10);
+            this.onPayment(false);
+            this.onCatalog(false, catalog1);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'L') {
+            this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive2('Ketik teks disini');
+            this.onCategories(false, categories1);
+            this.onQuickReply(true, menus10);
+            this.onPayment(false);
+            this.onCatalog(false, catalog1);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'XL') {
+            this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive2('Ketik teks disini');
+            this.onCategories(false, categories1);
+            this.onQuickReply(true, menus10);
+            this.onPayment(false);
+            this.onCatalog(false, catalog1);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'XS') {
+            this.onReceive('Produk sudah Dian masukkan ke dalam keranjang belanja Kakak. Buat liat keranjang belanja, Kakak bisa pilih menu di kiri bawah. Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive('Kakak masih mau cari produk lain atau mau check out sekarang?');
+            this.onReceive2('Ketik teks disini');
+            this.onCategories(false, categories1);
+            this.onQuickReply(true, menus10);
+            this.onPayment(false);
+            this.onCatalog(false, catalog1);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Cari produk lain') {
             this.onReceive('Mau cari produk apa, kak?');
             this.onReceive('Ini beberapa kategori produk yang tersedia disini. Kakak bisa pilih produknya berdasarkan kategori di bawah.');
@@ -966,6 +1296,8 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Check out') {
             this.onReceive('Oke, Dian minta alamat pengirimannya dulu ya, Kak.');
             this.onReceive('Siapa nama penerima pesanan?');
@@ -975,7 +1307,9 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Catherine P') {
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Obetz') {
             this.onReceive('Sekarang alamat lengkap penerima ya, Kak. Tolong tulis kecamatan dan kode posnya juga.');
             this.onReceive2('Ketik alamat penerima disini');
             this.onCategories(false, categories2);
@@ -983,7 +1317,9 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Bandung') {
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Jakarta') {
             this.onReceive('Terakhir, nomor HP penerima.');
             this.onReceive2('Ketik nomor penerima disini');
             this.onCategories(false, categories2);
@@ -991,24 +1327,30 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == '087788995609') {
-            this.onReceive('Trims, Kak. Dian ulang ya datanya.\nNama: Catherine P\nAlamat: Bandung\nNo HP: 087788995609');
-            this.onReceive2('Sudah benar kak alamatnya?');
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == '0') {
+            this.onReceive('Trims, Kak. Dian ulang ya datanya.\nNama: Obetz\nAlamat: Jakarta\nNo HP: 0');
+            this.onReceive('Sudah benar kak alamatnya? Mohon konfirmasinya.');
             this.onReceive2('Ketik teks disini');
             this.onCategories(false, categories2);
             this.onQuickReply(true, menus11);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Benar') {
             this.onReceive('Berikut total pesanan Kakak ya\nDress Panjang Hijau Wanita: Rp 600.000\nOngkir: Rp 11.000\nTotal Tagihan: Rp 611.000');
             this.onReceive('Mau bayar dengan metode apa Kak?');
             this.onReceive('Pembayaran disini terjamin aman dengan menggunakan payment gateway, disini Dian ga nyimpen informasi kartu kredit aman.');
-            this.onCategories(true, categories4);
             this.onQuickReply(false, menus11);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onCategories(true, categories4);
           } else if (messages[0].text == 'Pembayaran berhasil') {
             this.onReceive('Terima kasih! Pembayaran Kakak dengan kartu ');
             this.onReceive('Mau bayar dengan metode apa Kak?');
@@ -1018,6 +1360,8 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Lacak pesanan') {
             this.onReceive('Status Pesanan #1919292\n\nJumat, 5 Mei 2018: Pesanan bersama dengan kurir\nKamis, 4 Mei 2018: Pesanan tiba di BDO_Gateway\nRabu, 3 Mei 2018: Pesanan dikirimkan');
             this.onCategories(false, categories1);
@@ -1025,6 +1369,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(true, menus13);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Pesanan sampai') {
             this.onReceive('Terima kasih Kak! Semoga kakak suka sama pesanannya.');
             this.onReceive('Apakah Kakak puas dengan pesanannya? Mohon tulis ulasan sama rating produk ya. Jika Kakak tidak puas Kakak juga bisa mengajukan komplain.');
@@ -1033,6 +1379,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(true, menus14);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Tulis ulasan dan rating') {
             this.onReceive('Berapa rating yang Kakak berikan untuk produk Dress Panjang Biru Wanita?');
             this.onCategories(false, categories1);
@@ -1040,6 +1388,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(true, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == '⭐⭐⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1048,6 +1398,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == '⭐⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1056,6 +1408,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == '⭐⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Tolong tulis ulasan kakak untuk produk Dress Panjang Biru Wanita.');
             this.onReceive2('Ketik ulasan disini');
@@ -1064,6 +1418,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == '⭐⭐') {
             this.onReceive('Terima kasih atas ratingnya. Apakah ada masalah dengan produknya Kak? Kakak bisa mengajukan pengembalian pesanan kalo mau.');
             this.onReceive2('Ketik ulasan disini');
@@ -1072,6 +1428,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == '⭐') {
             this.onReceive('Terima kasih atas ratingnya. Apakah ada masalah dengan produknya Kak? Kakak bisa mengajukan pengembalian pesanan kalo mau.');
             this.onReceive2('Ketik ulasan disini');
@@ -1080,6 +1438,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus6);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Produk bagus') {
             this.onReceive('Terima kasih atas ulasannya Kak.');
             this.onReceive('Apakah Kakak puas dengan pelayanan dari Dian? Mohon maaf kalo Dian ada salah kata, tolong berikan kritik dan saran untuk pengembangan Dian ke depannya ya.');
@@ -1089,6 +1449,8 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(true, menus15);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Kurang puas') {
             this.onReceive('Mohon maaf kalo Dian masih kurang maksimal. Mohon berikan kritik dan saran untuk Dian.');
             this.onReceive2('Ketik ulasan disini');
@@ -1097,14 +1459,28 @@ class Example extends React.Component {
             this.onPayment(false);
             this.onQuickReply(false, menus15);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Mulai Pencarian Baru') {
             this.onReceive('Kakak mau cari apa?');
             this.onReceive2('Ketik pencarian disini');
-            this.onQuickReply(true, menus1);
-            this.onCategories(false, categories1);
+            this.onQuickReply(false, menus1);
+            this.onCategories(true, categories5);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Belanja lagi') {
+            this.onReceive('Kakak mau belanja apa lagi nih? Dian bantu carikan ya');
+            this.onReceive2('Ketik pencarian disini');
+            this.onQuickReply(false, menus1);
+            this.onCategories(true, categories5);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
           } else if (messages[0].text == 'Komplain') {
             this.onReceive('Ada masalah apa ya kak?');
             this.onReceive2('Ketik komplain disini');
@@ -1113,14 +1489,18 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
-          } else if (messages[0].text == 'Keranjang belanja') {
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Keranjang Belanja') {
             this.onReceive('Ini produk-produk dalam keranjang belanja Kakak. Check out sekarang untuk memesan.');
             this.onReceive2('Ketik tesk disini');
             this.onQuickReply(true, menus18);
             this.onCategories(false, categories1);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
-            this.onBasket(true, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onBasket(true, catalog4);
           } else if (messages[0].text == 'Transfer bank') {
             this.onReceive('Untuk metode transfer bank, mohon kirim ke beberapa rekening kami di bawah ini ya');
             this.onReceive2('Total: Rp 611.000\nRekening a.n PT Commerce Indonesia\nBank Mandiri: 292 383 2234\nBank BCA: 383 736 373');
@@ -1130,6 +1510,28 @@ class Example extends React.Component {
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Hapus Dress Panjang Hijau Wanita dari keranjang belanja') {
+            this.onReceive('Produk udah dihapus dari keranjang belanja kakak');
+            this.onReceive2('Total: Rp 611.000\nRekening a.n PT Commerce Indonesia\nBank Mandiri: 292 383 2234\nBank BCA: 383 736 373');
+            this.onReceive2('Jika sudah transfer, tolong konfirmasi dengan mengirimkan bukti pembayaran ya Kak.');
+            this.onQuickReply(false, menus17);
+            this.onCategories(false, categories1);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+          } else if (messages[0].text == 'Histori Transaksi') {
+            this.onReceive('Ini list histori transaksi Kakak');
+            this.onQuickReply(false, menus17);
+            this.onCategories(false, categories1);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(true,catalog3);
           } else if (!this._isAlright) {
               this._isAlright = true;
               this.onReceive('Mohon maaf, Dian ga paham maksud Kakak. Saat ini Dian masih dalam pengembangan, mohon berikan kritik dan saran untuk Dian ya.');
@@ -1139,6 +1541,8 @@ class Example extends React.Component {
               this.onPayment(false);
               this.onCatalog(false, catalog1);
               this.onBasket(false, catalog2);
+              this.onWishlist(false, catalog2);
+              this.onHistory(false,catalog3);
           }
         }
       }
@@ -1193,11 +1597,10 @@ class Example extends React.Component {
     });
   }
 
-  onMenu(bool, array) {
+  onMenu(bool) {
     this.setState((previousState) => {
       return {
         isMenu: bool,
-        items: array,
       };
     });
   }
@@ -1246,6 +1649,24 @@ class Example extends React.Component {
     });
   }
 
+  onHistory(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isHistory: bool,
+        entries: array,
+      };
+    });
+  }
+
+  onWishlist(bool, array) {
+    this.setState((previousState) => {
+      return {
+        isWishlist: bool,
+        entries: array,
+      };
+    });
+  }
+
   onPressButtonMenu(menu) {
     const messages = [{
     _id: Math.round(Math.random() * 1000000),
@@ -1269,7 +1690,7 @@ class Example extends React.Component {
 
   onPressMenu() {
     var menu= this.state.isMenu;
-    this.onMenu(!menu, menus1);
+    this.onMenu(!menu);
     this.changeHeight();
   }
 
@@ -1483,6 +1904,29 @@ class Example extends React.Component {
     );
   }
 
+  renderHistory(props) {
+    return (
+      <History
+        {...props}
+        style={{paddingBottom:86, paddingLeft: 20}}
+        onPress={this.onPressCatalog.bind(this)}
+        onPress2={this.onPressProductDetail.bind(this)}
+        onPress3={this.onPressWishlist.bind(this)}
+      />
+    );
+  }
+
+  renderWishlist(props) {
+    return (
+      <Wishlist
+        {...props}
+        style={{paddingBottom:86, paddingLeft: 20}}
+        onPress={this.onPressCatalog.bind(this)}
+        onPress2={this.onPressProductDetail.bind(this)}
+        onPress3={this.onPressWishlist.bind(this)}
+      />
+    );
+  }
 
   renderSend(props) {
         return (
@@ -1619,6 +2063,33 @@ class Example extends React.Component {
                         source={require('/Users/catherinepricillas/Chatbot/shared/static/heartlined.png')}
                       />
                       {'   '}Wishlist</Text>
+              </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={this.props.selectedOpacity} onPress={()=>this._onPress('Histori Transaksi')}>
+              <View style={
+                {
+                  backgroundColor: "#fff",
+                  borderColor: "#6a9cde",
+                  paddingTop:7,
+                  paddingBottom:7,
+                  paddingLeft:16,
+                  paddingRight:16,
+                  borderTopWidth:1,
+                  borderLeftWidth:1,
+                  borderRightWidth:1,
+                }
+              }>
+                <Text style={
+                  {
+                    color:"#e0a551",
+                    textAlign : "center",
+                    fontSize:15.5,
+                    fontWeight:this.props.fontWeight}
+                  }>
+                  <Image style={{height: 20, width: 20}}
+                        source={require('/Users/catherinepricillas/Chatbot/shared/static/history.png')}
+                      />
+                      {'   '}Histori Transaksi</Text>
               </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.7} onPress={()=>this.onPressPersistentMenu('Bantuan')}>
@@ -1906,25 +2377,26 @@ class Example extends React.Component {
               </Button>
               </Col>
             </Grid>
-            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+            <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Deskripsi</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
               <NBText note>
                 {this.state.product.description}
               </NBText>
             </View>
-            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+            <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Rating dan Ulasan</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
               <NBText note>
-                {this.state.product.description}
+                {this.state.product.description3}
               </NBText>
             </View>
-            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+            <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Informasi Penjual</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+              <Text>VilStore</Text>
               <NBText note>
-                {this.state.product.description}
+                {this.state.product.description2}
               </NBText>
             </View>
           </View>
@@ -1944,6 +2416,8 @@ class Example extends React.Component {
             isPayment={this.state.isPayment}
             isCatalog={this.state.isCatalog}
             isBasket={this.state.isBasket}
+            isHistory={this.state.isHistory}
+            isWishlist={this.state.isWishlist}
             slider1ActiveSlide={this.state.slider1ActiveSlide}
             items={this.state.items}
             items2={this.state.items2}
@@ -1971,12 +2445,13 @@ class Example extends React.Component {
             renderPayButton={this.renderPayButton}
             renderCatalog={this.renderCatalog}
             renderBasket={this.renderBasket}
+            renderHistory={this.renderHistory}
+            renderWishlist={this.renderWishlist}
             renderComposer={this.renderComposer}
             renderFooter={this.renderFooter}
             renderSend={this.renderSend}
             renderInputToolbar={this.renderInputToolbar} 
           />
-          {this.renderPMenu()};
       </SafeAreaView>
     );
   }
@@ -2075,8 +2550,9 @@ const s = StyleSheet.create({
 const dummyProduct = {
   id: 2,
   title: 'Dress Panjang Hijau Wanita',
-  description: "Pellentesque orci lectus, bibendum iaculis aliquet id, ullamcorper nec ipsum. In laoreet ligula vitae tristique viverra. Suspendisse augue nunc, laoreet in arcu ut, vulputate malesuada justo. Donec porttitor elit justo, sed lobortis nulla interdum et. Sed lobortis sapien ut augue condimentum, eget ullamcorper nibh lobortis. Cras ut bibendum libero. Quisque in nisl nisl. Mauris vestibulum leo nec pellentesque sollicitudin. Pellentesque lacus eros, venenatis in iaculis nec, luctus at eros. Phasellus id gravida magna. Maecenas fringilla auctor diam consectetur placerat. Suspendisse non convallis ligula. Aenean sagittis eu erat quis efficitur. Maecenas volutpat erat ac varius bibendum. Ut tincidunt, sem id tristique commodo, nunc diam suscipit lectus, vel",
-  image: 'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,w_358,x_150/v1500465309/pexels-photo-206470_nwtgor.jpg',
+  description: "Dress hijau wanita dengan potongan asimetrik pada bagian bawah.\n\nBahan: 60% Katun, 30% Sutra, 10% Poliester\n\nUkuran: (lingkar dada x pinggang x panjang)\nXS: (70x50x150cm)\nS: (72x52x150cm)\nM: (74x54x152cm)\nL: (76x56x152cm)\nXL: (78x58x154cm)",
+  description2: "Email: contact@vilstore.com\nNomor Telepon: 08255528233344\nLokasi: Jakarta",
+  description3: "⭐⭐⭐⭐⭐\nVillie                                                      14 Mei 2018\n\nPengirimannya cepat, produk sesuai gambar, ukuran sesuai size chart juga. Top deh! Recommended.",
   images: [
     'https://image.ibb.co/kkaiZS/fotoproduk.jpg',
     'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,x_226,y_54/v1500465309/pexels-photo-521197_hg8kak.jpg',

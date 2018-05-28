@@ -571,6 +571,40 @@ let menus22 = [
 ];
 
 
+let menus23 = [
+    {
+       text:'Bahan',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Ukuran',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+    {
+       text:'Stok',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+      {
+       text:'Promo',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+      {
+       text:'Penjual',
+       textColor:'#eba43b',
+       backgroundColor:'#FFFFFF',
+       borderColor:'#eba43b',
+    }, 
+];
+
+
 
 let categories1 = [
     {
@@ -892,6 +926,7 @@ class Example extends React.Component {
       selectedSize: '',
       isReady:false,
       messagesContainerHeight:null,
+      buttonPay:false,
       items: [
         {
            text:'Contoh 1',
@@ -1005,6 +1040,7 @@ class Example extends React.Component {
   setModalVisible(visible) {
 
     this.setState({modalVisible: visible});
+
   }
 
    setModal2Visible(visible) {
@@ -1660,6 +1696,19 @@ class Example extends React.Component {
             this.onReceive2('Ketik pencarian disini');
             this.onQuickReply(false, menus1);
             this.onCategories(true, categories5);
+            this.onCatalog(false, catalog1);
+            this.onPayment(false);
+            this.onBasket(false, catalog2);
+            this.onWishlist(false, catalog2);
+            this.onHistory(false,catalog3);
+            this.onAddress(false, alamat1);
+            
+            } else if (messages[0].text == 'Tanya mengenai Dress Panjang Hijau Wanita') {
+            this.onReceive('Kakak tertarik sama produk Dress Panjang Hijau Wanita? Dian bisa bantu jawab pertanyaan Kakak seputar produk.');
+            this.onReceive('Kak Catherine mau nanya soal apa?');
+            this.onReceive2('Ketik pertanyaan disini');
+            this.onQuickReply(true, menus23);
+            this.onCategories(false, categories1);
             this.onCatalog(false, catalog1);
             this.onPayment(false);
             this.onBasket(false, catalog2);
@@ -2406,6 +2455,17 @@ class Example extends React.Component {
     this.setModal2Visible(!this.state.modal2Visible);
   }
 
+    askQuest() {
+    const messages = [{
+    _id: Math.round(Math.random() * 1000000),
+    text: 'Tanya mengenai Dress Panjang Hijau Wanita',
+    createdAt: new Date(),
+    user: {_id: 1, name: 'User',
+    }}];
+    this.onSend(messages);
+    this.setModal2Visible(!this.state.modal2Visible);
+  }
+
 
   render() {
     if (!this.state.isReady) {
@@ -2467,7 +2527,25 @@ class Example extends React.Component {
           <Modal
           animationType="slide"
           transparent={false}
-          visible={this.state.modalVisible}>
+          visible={this.state.modalVisible}
+          onDismiss={() => {
+            Alert.alert(
+              'Pembayaran Anda telah berhasil',
+              'Pembayaran untuk Pesanan #1919292 telah berhasil kami terima.',
+              [
+                {text: 'OK'},
+              ],
+            )
+          }}
+          onShow={() => {
+            Alert.alert(
+              'Perhatian',
+              'Kerahasiaan data Anda 100% terjamin. Pembayaran menggunakan payment gateway uang diatur oleh OJK. Pihak e-commerce tidak menyimpan data kartu kredit Anda.',
+              [
+                {text: 'OK'},
+              ],
+            )
+          }}>>
 
           <SafeAreaView style={styles.container}>
           <NavBar style={navbarPayment}>
@@ -2602,14 +2680,49 @@ class Example extends React.Component {
               </Col>
               <Col>
                 <TouchableOpacity
+                onPress={this.askQuest.bind(this)}
+                >
+                <Image style={{height: 45, width: 45, marginLeft: 33}}
+                        source={require('Chatbot/shared/static/ask2.png')}/>
+                </TouchableOpacity>
+              </Col>
+              <Col>
+                <TouchableOpacity
                 onPress={this.addToWishlist.bind(this)}
                 >
-                <Image style={{height: 30, width: 34, marginLeft: 35, marginTop:5}}
-                        source={require('Chatbot/shared/static/heartout2.png')}/>
+                <Image style={{height: 45, width: 45, marginLeft: 20, }}
+                        source={require('Chatbot/shared/static/heart2.png')}/>
                 </TouchableOpacity>
               </Col>
             </Grid>
-            <View style={{marginTop: 22, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+              <View style={{marginTop: 22, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
+              <Text style={{marginBottom: 5}}>Varian</Text>
+              <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+              <TouchableOpacity
+                style={s.sscreenButton}>
+                <Text style={s.loginText2}>XS</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={s.sscreenButton2}>
+                <Text style={s.loginText3}>S</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={s.sscreenButton3}>
+                <Text style={s.loginText3}>M</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={s.sscreenButton4}>
+                <Text style={s.loginText3}>L</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={s.sscreenButton5}>
+                <Text style={s.loginText3}>XL</Text>
+              </TouchableOpacity>
+               <NBText note>
+                   Stok: 5
+               </NBText>
+            </View>
+            <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Deskripsi</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
               <NBText note>
@@ -2619,6 +2732,8 @@ class Example extends React.Component {
             <View style={{marginTop: 15, width: 360, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Rating dan Ulasan</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
+              <Image style={{height: 22, width: 60, marginLeft: 33, marginTop: -7}}
+                source={require('Chatbot/shared/static/fivestar.png')}/>
               <NBText note>
                 {this.state.product.description3}
               </NBText>
@@ -2631,14 +2746,6 @@ class Example extends React.Component {
                 {this.state.product.description2}
               </NBText>
             </View>
-            <TouchableOpacity
-                style={s.loginScreenButton}
-                onPress={() => {
-                  this.onTriggerMessage('Pembayaran berhasil')
-                }}
-                underlayColor='#fff'>
-                <Text style={s.loginText}>Bayar</Text>
-                </TouchableOpacity>
           </View>
         </Content>
       </Container>
@@ -2658,6 +2765,7 @@ class Example extends React.Component {
             isCatalog={this.state.isCatalog}
             isBasket={this.state.isBasket}
             isHistory={this.state.isHistory}
+            buttonPay={this.state.buttonPay}
             isWishlist={this.state.isWishlist}
             slider1ActiveSlide={this.state.slider1ActiveSlide}
             items={this.state.items}
@@ -2780,7 +2888,7 @@ const s = StyleSheet.create({
   },
   screenButton:{
     marginRight:0,
-    width:270,
+    width:230,
     height: 45,
     marginLeft:0,
     marginTop:0,
@@ -2792,6 +2900,76 @@ const s = StyleSheet.create({
     borderColor: '#eba43b',
     position: 'absolute',
   },
+  sscreenButton:{
+    marginRight:0,
+    width:35,
+    height: 35,
+    marginLeft:0,
+    marginTop:0,
+    marginBottom: 8,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#fdfdfd',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: '#eba43b',
+  },
+  sscreenButton2:{
+    marginRight:0,
+    width:35,
+    height: 35,
+    marginLeft:42,
+    marginTop:-43,
+    marginBottom: 8,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#fdfdfd',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: '#cecece',
+  },
+    sscreenButton3:{
+    marginRight:0,
+    width:35,
+    height: 35,
+    marginLeft:84,
+    marginTop:-43,
+    marginBottom: 8,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#fdfdfd',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: '#cecece',
+  },
+    sscreenButton4:{
+    marginRight:0,
+    width:35,
+    height: 35,
+    marginLeft:126,
+    marginTop:-43,
+    marginBottom: 8,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#fdfdfd',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: '#cecece',
+  },
+    sscreenButton5:{
+    marginRight:0,
+    width:35,
+    height: 35,
+    marginLeft:168,
+    marginTop:-43,
+    marginBottom: 8,
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#fdfdfd',
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: '#cecece',
+  },
   loginText:{
       color:'#fff',
       textAlign:'center',
@@ -2800,7 +2978,19 @@ const s = StyleSheet.create({
       marginTop: 3,
       fontSize: 16,
       fontWeight: 'bold'
-  }
+  },
+  loginText2:{
+      color:'#eba43b',
+      textAlign:'center',
+      marginTop: -3,
+      fontSize: 16,
+  },
+    loginText3:{
+      color:'#cecece',
+      textAlign:'center',
+      marginTop: -3,
+      fontSize: 16,
+  },
 });
 
 
@@ -2809,7 +2999,7 @@ const dummyProduct = {
   title: 'Dress Panjang Hijau Wanita',
   description: "Dress hijau wanita dengan potongan asimetrik pada bagian bawah.\n\nBahan: 60% Katun, 30% Sutra, 10% Poliester\n\nUkuran: (lingkar dada x pinggang x panjang)\nXS: (70x50x150cm)\nS: (72x52x150cm)\nM: (74x54x152cm)\nL: (76x56x152cm)\nXL: (78x58x154cm)",
   description2: "Email: contact@vilstore.com\nNomor Telepon: 08255528233344\nLokasi: Jakarta",
-  description3: "⭐⭐⭐⭐⭐\nVillie                                                      14 Mei 2018\n\nPengirimannya cepat, produk sesuai gambar, ukuran sesuai size chart juga. Top deh! Recommended.",
+  description3: "Villie                                                      14 Mei 2018\n\nPengirimannya cepat, produk sesuai gambar, ukuran sesuai size chart juga. Top deh! Recommended.",
   images: [
     'https://image.ibb.co/kkaiZS/fotoproduk.jpg',
     'http://res.cloudinary.com/atf19/image/upload/c_crop,h_250,x_226,y_54/v1500465309/pexels-photo-521197_hg8kak.jpg',
